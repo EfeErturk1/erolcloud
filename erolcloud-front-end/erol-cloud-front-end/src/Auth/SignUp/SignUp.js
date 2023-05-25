@@ -23,7 +23,7 @@ const SignUp = () => {
         } else {
             event.preventDefault();
 
-            fetch("http://localhost:8081/auth/signupStudent", {
+            fetch("http://localhost:8080/auth/signupStudent", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
