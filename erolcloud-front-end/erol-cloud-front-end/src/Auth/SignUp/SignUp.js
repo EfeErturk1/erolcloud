@@ -8,20 +8,17 @@ import { useNavigate } from "react-router-dom";
 // T
 const SignUp = () => {
     let navigate = useNavigate()
-    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordRepeat, setPasswordRepeat] = useState("");
 
     const handleSubmit = (event) => {
-        if (username == "" || email == "" || password == "") {
+        if (email == "" || password == "") {
             window.alert("No fields can be left empty!")
         } else if (!email.includes("@ug.bilkent.edu.tr")) {
             window.alert("Only Bilkent students can register")
         } else if (password != passwordRepeat) {
             window.alert("Provided passwords are incorrect")
-        } else if (username.length >= 20 || username.length < 3) {
-            window.alert("Provided username is too long or short")
 
         } else {
             event.preventDefault();
@@ -33,7 +30,7 @@ const SignUp = () => {
                     "Accept": "application/json"
                 },
                 body: JSON.stringify(
-                    {name: username, email, password}
+                    {name: email, password}
                 )
             }).then((r) => {
                 if (r.ok) {
@@ -62,12 +59,6 @@ const SignUp = () => {
 
                     <form className='d-flex flex-column justify-content-center align-items-center'
                         onSubmit={handleSubmit}>
-                        <label>
-                            <input type="text" className="form-control" placeholder="Username"
-                                onChange={
-                                    e => setUsername(e.target.value)
-                                }/>
-                        </label>
                         <label>
                             <input type="text" className=" mt-2 form-control" placeholder="Email"
                                 onChange={

@@ -11,6 +11,7 @@ function App() {
           <Routes>
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} />
+            <Route path="redirecting" element={<Buffer />} />
           </Routes>
         </Router>
       </div>

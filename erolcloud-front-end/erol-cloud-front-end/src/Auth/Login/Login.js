@@ -5,21 +5,21 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 const Login = () => {
-    const [username, setUserName] = useState();
+    const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     let navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        fetch("http://localhost:8081/auth/login", {
+        fetch("http://localhost:8081/api/v1/authentication/login", {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
                 "Accept": "application/json"
             },
             body: JSON.stringify(
-                {username, password}
+                {email, password}
             )
         }).then((r) => {
             if (r.ok) {
@@ -34,8 +34,6 @@ const Login = () => {
             localStorage.setItem('email', response.email);
             localStorage.setItem('id', response.id);
             localStorage.setItem("role", response.roles[0]);
-            localStorage.setItem("onclub", "false");
-            localStorage.setItem("clubId", response.clubId);
             navigate('/redirecting');
         }).catch((e) => {
             console.log("here");
@@ -45,7 +43,6 @@ const Login = () => {
 
     return (
         <div className="login-body">
-
             <div className="card">
                 <div className="intro">
                     <img src={Logo}
@@ -55,9 +52,9 @@ const Login = () => {
                 <form className='d-flex flex-column justify-content-center align-items-center'
                     onSubmit={handleSubmit}>
                     <label>
-                        <input type="text" className="form-control" placeholder="Username"
+                        <input type="text" className="form-control" placeholder="Email"
                             onChange={
-                                e => setUserName(e.target.value)
+                                e => setEmail(e.target.value)
                             }/>
                     </label>
                     <label>
