@@ -17,12 +17,15 @@ public class Lecture {
 
     private LocalDateTime endDate;
 
+    private String code;
+
     public Lecture() {}
 
     public Lecture(Course course, LocalDateTime startDate, LocalDateTime endDate) {
         this.course = course;
         this.startDate = startDate;
         this.endDate = endDate;
+        code = String.format("%06d", (int) (Math.random() * 1000000));
     }
 
     public Long getId() {

@@ -1,7 +1,7 @@
 package com.erolcloud.erolcloud.entity;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class Course {
@@ -15,13 +15,13 @@ public class Course {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "time_slot_id"))
-    private Set<TimeSlot> timeSlots;
+    private List<TimeSlot> timeSlots;
 
     public Course() {}
 
-    public Course(Integer section, String code, String name, Set<TimeSlot> timeSlots) {
+    public Course(Integer section, String code, String name, List<TimeSlot> timeSlots) {
         this.section = section;
         this.code = code;
         this.name = name;
@@ -60,11 +60,11 @@ public class Course {
         this.name = name;
     }
 
-    public Set<TimeSlot> getTimeSlots() {
+    public List<TimeSlot> getTimeSlots() {
         return timeSlots;
     }
 
-    public void setTimeSlots(Set<TimeSlot> timeSlots) {
+    public void setTimeSlots(List<TimeSlot> timeSlots) {
         this.timeSlots = timeSlots;
     }
 }
