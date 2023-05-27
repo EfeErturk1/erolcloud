@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import "./Login.css"
 import Logo from "../../Assets/bilkent_logo.png"
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState();
@@ -25,6 +25,7 @@ const Login = () => {
                 return r;
             }
             if (r.status === 401 || r.status === 403 || r.status === 500) {
+                window.alert("Wrong email or password");
                 return Promise.reject(new Error("hata oluştu"));
             }
             return Promise.reject(new Error("bilinmeyen hata"));

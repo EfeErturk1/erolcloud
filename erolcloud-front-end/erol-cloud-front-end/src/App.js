@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import {Login, SignUp, Buffer} from "./Auth";
+import StudentHomePage from "./Pages/StudentHomePage";
 
 function App() {
     if (!localStorage.getItem('token')) {
@@ -16,21 +17,26 @@ function App() {
                 </Router>
             </div>
         );
-    } else if (localStorage.role === "ROLE_ADMIN") {
+    } else if (localStorage.role === "ADMIN") {
         return (
             <div>
                 <h1>ROLE_ADMIN</h1>
                 {/* Render your admin-specific routes or components here */}
             </div>
         );
-    } else if (localStorage.role === "ROLE_STUDENT") {
+    } else if (localStorage.role === "STUDENT") {
         return (
             <div>
-                <h1>ROLE_STUDENT</h1>
-                {/* Render your student-specific routes or components here */}
+                <div>
+                    <Router>
+                        <Routes>
+                            <Route path="/home" element={<StudentHomePage/>}/>
+                        </Routes>
+                    </Router>
+                </div>
             </div>
         );
-    } else if (localStorage.role === "ROLE_INSTRUCTOR") {
+    } else if (localStorage.role === "INSTRUCTOR") {
         return (
             <div>
                 <h1>ROLE_INSTRUCTOR</h1>

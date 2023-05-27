@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import "./SignUp.css"
 import Logo from "../../Assets/bilkent_logo.png"
-import {Link} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 
 
@@ -9,28 +8,29 @@ import {useNavigate} from "react-router-dom";
 const SignUp = () => {
     let navigate = useNavigate()
     const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [passwordRepeat, setPasswordRepeat] = useState("");
 
     const handleSubmit = (event) => {
-        if (email == "" || password == "") {
+        if (email === "" || password === "" || name === "") {
             window.alert("No fields can be left empty!")
         } else if (!email.includes("@ug.bilkent.edu.tr")) {
             window.alert("Only Bilkent students can register")
-        } else if (password != passwordRepeat) {
+        } else if (password !== passwordRepeat) {
             window.alert("Provided passwords are incorrect")
 
         } else {
             event.preventDefault();
 
-            fetch("http://localhost:8080/api/v1/signupStudent", {
+            fetch("http://localhost:8080/api/v1/authentication/register", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                     "Accept": "application/json"
                 },
                 body: JSON.stringify(
-                    {name: email, password}
+                    {name: name, email, password}
                 )
             }).then((r) => {
                 if (r.ok) {
@@ -59,6 +59,12 @@ const SignUp = () => {
 
                     <form className='d-flex flex-column justify-content-center align-items-center'
                           onSubmit={handleSubmit}>
+                        <label>
+                            <input type="text" className=" mt-2 form-control" placeholder="Name"
+                                   onChange={
+                                       e => setName(e.target.value)
+                                   }/>
+                        </label>
                         <label>
                             <input type="text" className=" mt-2 form-control" placeholder="Email"
                                    onChange={
