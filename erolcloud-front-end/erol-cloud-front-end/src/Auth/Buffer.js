@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, {useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
 
 /**
  * This page redirects the user from login page to the home page
@@ -8,14 +8,14 @@ import { useNavigate } from "react-router-dom";
  * but after the login, the autheticated routers (Student system, Admin System and Advisor system)
  * will be returned. But the page will not initially render them since it requires one reload of this page.
  * This page is reponsible for redirecting the user from /login to /home and refresh the page.
- */ 
+ */
 const Buffer = () => {
     let navigate = useNavigate();
 
     useEffect(() => {
         navigate("/home")
         window.location.reload();
-      });
+    });
 
     return (
         <div>

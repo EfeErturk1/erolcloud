@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import "./SignUp.css"
 import Logo from "../../Assets/bilkent_logo.png"
 import {Link} from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 
 // T
@@ -23,7 +23,7 @@ const SignUp = () => {
         } else {
             event.preventDefault();
 
-            fetch("http://localhost:8080/auth/signupStudent", {
+            fetch("http://localhost:8080/api/v1/signupStudent", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -50,7 +50,7 @@ const SignUp = () => {
             <div className="card text-center">
                 <div className="intro">
                     <img src={Logo}
-                        width="160"/>
+                         width="160"/>
                 </div>
                 <div className="mt-4 text-center">
                     <h4>Don't have an account?</h4>
@@ -58,24 +58,24 @@ const SignUp = () => {
 
 
                     <form className='d-flex flex-column justify-content-center align-items-center'
-                        onSubmit={handleSubmit}>
+                          onSubmit={handleSubmit}>
                         <label>
                             <input type="text" className=" mt-2 form-control" placeholder="Email"
-                                onChange={
-                                    e => setEmail(e.target.value)
-                                }/>
+                                   onChange={
+                                       e => setEmail(e.target.value)
+                                   }/>
                         </label>
                         <label>
                             <input type="password" className="mt-2 form-control" placeholder="Password"
-                                onChange={
-                                    e => setPassword(e.target.value)
-                                }/>
+                                   onChange={
+                                       e => setPassword(e.target.value)
+                                   }/>
                         </label>
                         <label>
                             <input type="password" className="mt-3 form-control" placeholder="Password Again"
-                                onChange={
-                                    e => setPasswordRepeat(e.target.value)
-                                }/>
+                                   onChange={
+                                       e => setPasswordRepeat(e.target.value)
+                                   }/>
                         </label>
                         <div>
                             <button className="mt-3 btn btn-primary btn-block" type="submit">Register</button>
@@ -85,11 +85,11 @@ const SignUp = () => {
 
                     <div className="text-center intro">
                         <p className="form-check"
-                            onClick={
-                                () => {
-                                    navigate("/")
-                                }
-                        }>
+                           onClick={
+                               () => {
+                                   navigate("/")
+                               }
+                           }>
                             Already have an account? Click here to login
                         </p>
                     </div>
