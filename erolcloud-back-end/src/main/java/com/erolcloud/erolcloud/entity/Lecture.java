@@ -59,4 +59,12 @@ public class Lecture {
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

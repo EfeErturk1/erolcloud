@@ -1,5 +1,6 @@
 package com.erolcloud.erolcloud.controller;
 
+import com.erolcloud.erolcloud.request.AttendLectureRequest;
 import com.erolcloud.erolcloud.request.CourseEnrollRequest;
 import com.erolcloud.erolcloud.response.LectureResponse;
 import com.erolcloud.erolcloud.response.CourseResponse;
@@ -34,8 +35,13 @@ public class StudentController {
         return new ResponseEntity<>(studentService.getCurrentDayLectures(studentId), HttpStatus.OK);
     }
 
-    @PostMapping("/enrollments")
+    @PutMapping("/enrollments")
     public ResponseEntity<CourseResponse> enrollCourse(@Valid @RequestBody CourseEnrollRequest courseEnrollRequest) {
         return new ResponseEntity(studentService.enrollCourse(courseEnrollRequest), HttpStatus.OK);
+    }
+
+    @PostMapping("/attendances")
+    public ResponseEntity<LectureResponse> attendLecture(@Valid @RequestBody AttendLectureRequest attendLectureRequest) {
+        return new ResponseEntity<>(studentService.attendLecture(attendLectureRequest), HttpStatus.CREATED);
     }
 }

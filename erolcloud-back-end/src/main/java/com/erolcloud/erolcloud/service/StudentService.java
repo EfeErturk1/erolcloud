@@ -3,11 +3,11 @@ package com.erolcloud.erolcloud.service;
 import com.erolcloud.erolcloud.entity.Course;
 import com.erolcloud.erolcloud.entity.Lecture;
 import com.erolcloud.erolcloud.entity.Student;
-import com.erolcloud.erolcloud.exception.EntityAlreadyExistsException;
-import com.erolcloud.erolcloud.exception.EntityNotFoundException;
+import com.erolcloud.erolcloud.exception.*;
 import com.erolcloud.erolcloud.repository.CourseRepository;
 import com.erolcloud.erolcloud.repository.LectureRepository;
 import com.erolcloud.erolcloud.repository.StudentRepository;
+import com.erolcloud.erolcloud.request.AttendLectureRequest;
 import com.erolcloud.erolcloud.request.CourseEnrollRequest;
 import com.erolcloud.erolcloud.response.LectureResponse;
 import com.erolcloud.erolcloud.response.CourseResponse;
@@ -52,6 +52,36 @@ public class StudentService {
         return CourseService.getCourseResponse(course);
     }
 
+    @PreAuthorize("hasAuthority('STUDENT') and #attendLectureRequest.studentId == authentication.principal.id")
+    public LectureResponse attendLecture(AttendLectureRequest attendLectureRequest) {
+        Student student = studentRepository.findById(attendLectureRequest.getStudentId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Student with ID " + attendLectureRequest.getStudentId() + " not found."));
+        Lecture lecture = lectureRepository.findById(attendLectureRequest.getLectureId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Lecture with ID " + attendLectureRequest.getLectureId() + " not found."));
+        if (!student.getCourses().contains(lecture.getCourse())) {
+            throw new CourseLectureMismatchException("Lecture with ID " + lecture.getId() +
+                    " does not belong to student's courses.");
+        }
+        if (!attendLectureRequest.getCode().equals(lecture.getCode())) {
+            throw new LectureCodeMismatchException("Lecture code does not match.");
+        }
+        if (lecture.getEndDate().isBefore(LocalDateTime.now())) {
+            throw new LectureExpiredException("Lecture with ID " + lecture.getId() + " is already done.");
+        }
+        List<Lecture> studentLectures = student.getAttendances();
+        if (studentLectures.contains(lecture)) {
+            throw new EntityAlreadyExistsException("Student with ID " + student.getId()
+                    + " already attended the lecture with ID " + lecture.getId() + ".");
+        }
+        studentLectures.add(lecture);
+        student.setAttendances(studentLectures);
+        studentRepository.save(student);
+        return new LectureResponse(lecture.getId(), lecture.getStartDate(), lecture.getEndDate(),
+                CourseService.getCourseResponse(lecture.getCourse()));
+    }
+
     @PreAuthorize("hasAuthority('STUDENT') and #studentId == authentication.principal.id")
     public List<CourseResponse> getEnrolledCourses(Long studentId) {
         Student student = studentRepository.findById(studentId)
@@ -73,11 +103,9 @@ public class StudentService {
     public List<LectureResponse> getCurrentDayLectures(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new EntityNotFoundException("Student with ID " + studentId + " not found."));
-        List<Lecture> currentDayLectures = lectureRepository
-                .findAllByStartDateBetween(
+        List<Lecture> currentDayLectures = lectureRepository.findAllByStartDateBetween(
                         LocalDateTime.of(LocalDate.now(), LocalTime.MIN),
-                        LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
-                );
+                        LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
         List<Lecture> studentCurrentDayLectures = new ArrayList<>();
         for (Course course : student.getCourses()) {
             for (Lecture lecture : currentDayLectures) {
