@@ -30,9 +30,20 @@ public class StudentController {
         return new ResponseEntity<>(studentService.getEnrolledCourses(studentId), HttpStatus.OK);
     }
 
-    @GetMapping("/{studentId}/lectures")
+    @GetMapping("/{studentId}/lectures/today")
     public ResponseEntity<List<LectureResponse>> getCurrentDayLectures(@PathVariable Long studentId) {
         return new ResponseEntity<>(studentService.getCurrentDayLectures(studentId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{studentId}/lectures/current")
+    public ResponseEntity<LectureResponse> getCurrentTimeSlotLectures(@PathVariable Long studentId) {
+        LectureResponse lectureResponse = studentService.getCurrentTimeSlotLectures(studentId);
+        if (lectureResponse == null) {
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            return ResponseEntity.ok(lectureResponse);
+        }
     }
 
     @PutMapping("/enrollments")

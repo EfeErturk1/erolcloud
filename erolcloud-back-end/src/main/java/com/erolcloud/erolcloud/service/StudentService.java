@@ -119,4 +119,40 @@ public class StudentService {
                         CourseService.getCourseResponse(lecture.getCourse())))
                 .collect(Collectors.toList());
     }
+
+    @PreAuthorize("hasAuthority('STUDENT') and #studentId == authentication.principal.id")
+    public LectureResponse getCurrentTimeSlotLectures(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException("Student with ID " + studentId + " not found."));
+        List<Lecture> currentDayLectures;
+        if (LocalTime.now().isBefore(LocalTime.of(10, 20))) {
+            currentDayLectures = lectureRepository.findAllByStartDateBetween(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.MIN),
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 20)));
+        }
+        else if (LocalTime.now().isBefore(LocalTime.of(12, 20))) {
+            currentDayLectures = lectureRepository.findAllByStartDateBetween(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 20)),
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(12, 20)));
+        }
+        else if (LocalTime.now().isBefore(LocalTime.of(15, 20))) {
+            currentDayLectures = lectureRepository.findAllByStartDateBetween(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(13, 20)),
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(15, 20)));
+        }
+        else {
+            currentDayLectures = lectureRepository.findAllByStartDateBetween(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(15, 20)),
+                    LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
+        }
+        for (Course course : student.getCourses()) {
+            for (Lecture lecture : currentDayLectures) {
+                if (lecture.getCourse().getId().equals(course.getId())) {
+                    return new LectureResponse(lecture.getId(), lecture.getStartDate(), lecture.getEndDate(),
+                            CourseService.getCourseResponse(lecture.getCourse()));
+                }
+            }
+        }
+        return null;
+    }
 }
