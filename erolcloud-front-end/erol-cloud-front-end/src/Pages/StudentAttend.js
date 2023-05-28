@@ -6,7 +6,6 @@ const StudentAttend = () => {
     let navigate = useNavigate();
     const [code, setCode] = useState("");
     const studentId = localStorage.getItem("id");
-    let lectureId = 0;
     const handleRegister = () => {
         if (code.length !== 6) {
             window.alert("Please enter a valid code");
@@ -16,13 +15,19 @@ const StudentAttend = () => {
                 headers: {
                     "Content-type": "application/json",
                     "Accept": "application/json",
-                    "Authorization": localStorage.getItem('accessToken')
+                    "Authorization": "Bearer " + localStorage.getItem('token')
                 }
             }).then((r) => {
-                if (r.ok) {
+                if (r.status === 200) {
                     window.alert("Attendance registered successfully");
-                    navigate('/home');
-                } else if (r.status === 401 || r.status === 403 || r.status === 500) {
+                    navigate('/');
+                }else if (r.status === 204){
+                    window.alert("You do not have a current lecture to attend");
+                    navigate('/');
+                }else if (r.status === 400){
+                    window.alert("Error in registering attendance");
+                }
+                else if (r.status === 401 || r.status === 403 || r.status === 500) {
                     return Promise.reject(new Error("hata oluştu"));
                 } else {
                     return Promise.reject(new Error("bilinmeyen hata"));
@@ -35,7 +40,7 @@ const StudentAttend = () => {
         <div className="container">
             <div className="row mt-4">
                 <div className="col-12">
-                    <button className="btn btn-primary" onClick={() => navigate('/home')}>Home</button>
+                    <button className="btn btn-primary" onClick={() => navigate('/')}>Home</button>
                 </div>
             </div>
             <div className="row mt-4">

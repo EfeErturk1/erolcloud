@@ -13,7 +13,7 @@ const Buffer = () => {
     let navigate = useNavigate();
 
     useEffect(() => {
-        navigate("/home")
+        navigate("/")
         window.location.reload();
     });
 
