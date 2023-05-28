@@ -4,6 +4,7 @@ import Logo from "../../Assets/bilkent_logo.png"
 import {useNavigate} from "react-router-dom";
 
 const Login = () => {
+    localStorage.clear();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     let navigate = useNavigate();

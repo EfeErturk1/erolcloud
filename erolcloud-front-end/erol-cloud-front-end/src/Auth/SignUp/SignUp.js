@@ -30,7 +30,7 @@ const SignUp = () => {
                     "Accept": "application/json"
                 },
                 body: JSON.stringify(
-                    {name: name, email, password}
+                    {name: name, email: email, password: password}
                 )
             }).then((r) => {
                 if (r.ok) {

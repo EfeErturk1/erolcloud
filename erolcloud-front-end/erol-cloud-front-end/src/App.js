@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import {Login, SignUp, Buffer} from "./Auth";
-import StudentHomePage from "./Pages/StudentHomePage";
+import {StudentHomePage, StudentAttend} from "./Pages";
 
 function App() {
     if (!localStorage.getItem('token')) {
@@ -31,6 +31,7 @@ function App() {
                     <Router>
                         <Routes>
                             <Route path="/home" element={<StudentHomePage/>}/>
+                            <Route path="/attend" element={<StudentAttend/>}/>
                         </Routes>
                     </Router>
                 </div>

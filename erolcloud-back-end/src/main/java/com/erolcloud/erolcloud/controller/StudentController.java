@@ -46,6 +46,18 @@ public class StudentController {
         }
     }
 
+    @PutMapping("/{studentId}/attendCurrentLecture/{code}")
+    public ResponseEntity<LectureResponse> attendCurrentLecture(@PathVariable Long studentId, @PathVariable String code) {
+        LectureResponse lectureResponse = studentService.getCurrentTimeSlotLectures(studentId);
+        if (lectureResponse == null) {
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            AttendLectureRequest attendLectureRequest = new AttendLectureRequest(studentId, lectureResponse.getId(), code);
+            return new ResponseEntity<>(studentService.attendLecture(attendLectureRequest), HttpStatus.OK);
+        }
+    }
+
     @PutMapping("/enrollments")
     public ResponseEntity<CourseResponse> enrollCourse(@Valid @RequestBody CourseEnrollRequest courseEnrollRequest) {
         return new ResponseEntity(studentService.enrollCourse(courseEnrollRequest), HttpStatus.OK);

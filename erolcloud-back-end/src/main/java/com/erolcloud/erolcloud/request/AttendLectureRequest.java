@@ -10,6 +10,12 @@ public class AttendLectureRequest {
     @NotBlank
     private String code;
 
+    public AttendLectureRequest(Long studentId, Long lectureId, String code) {
+        this.studentId = studentId;
+        this.lectureId = lectureId;
+        this.code = code;
+    }
+
     public Long getStudentId() {
         return studentId;
     }
