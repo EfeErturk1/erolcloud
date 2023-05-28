@@ -46,7 +46,7 @@ const StudentAttend = () => {
             <div className="row mt-4">
                 <div className="col-12 text-center">
                     <h2>You are currently having X course</h2>
-                    <h2>To register Attendance, enter the code that your instructor has displayed below</h2>
+                    <h2>To register attendance, enter the code that your instructor has displayed below</h2>
                 </div>
             </div>
             <div className="row mt-4">
