@@ -1,36 +1,34 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 //import './Page.css';
 
 const InstructorTakeAttendance = () => {
     let navigate = useNavigate();
-    let code = 313131;
-    const studentId = localStorage.getItem("id");
-    const displayCode = () => {
-            fetch("http://localhost:8080/api/v1/students/"+studentId+"/attendCurrentLecture/"+code, {
-                method: "PUT",
+    const [code, setCode] = useState("LOLO No code exists");
+    const instructorId = localStorage.getItem("id");
+
+    useEffect(() => {
+    const displayCode = async () => {
+        try {
+            const response = fetch("http://localhost:8080/api/v1/instructors/" + instructorId + "/lectures/current", {
+                method: "GET",
                 headers: {
                     "Content-type": "application/json",
                     "Accept": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem('token')
                 }
-            }).then((r) => {
-                if (r.status === 200) {
-                    window.alert("Attendance registered successfully");
-                    navigate('/');
-                }else if (r.status === 204){
-                    window.alert("You do not have a current lecture to attend");
-                    navigate('/');
-                }else if (r.status === 400){
-                    window.alert("Error in registering attendance");
-                }
-                else if (r.status === 401 || r.status === 403 || r.status === 500) {
-                    return Promise.reject(new Error("hata oluştu"));
-                } else {
-                    return Promise.reject(new Error("bilinmeyen hata"));
-                }
             })
+            const data = await response.json();
+            setCode(data)
+            console.log(data);
+        } catch (e) {
+            console.log("Error fetching courses:", e);
+            setCode("Error in code display")
+        }
     };
+        displayCode();
+        }, []);
+
 
     return (
         <div className="container">

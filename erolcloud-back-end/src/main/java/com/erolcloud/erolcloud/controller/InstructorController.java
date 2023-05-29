@@ -1,6 +1,7 @@
 package com.erolcloud.erolcloud.controller;
 
 import com.erolcloud.erolcloud.response.AttendanceResponse;
+import com.erolcloud.erolcloud.response.InstructorCodeResponse;
 import com.erolcloud.erolcloud.response.StudentResponse;
 import com.erolcloud.erolcloud.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,13 @@ public class InstructorController {
     }
 
     @GetMapping("/{instructorId}/lectures/current")
-    public ResponseEntity<String> getCurrentLectureCode(@PathVariable Long instructorId) {
-        return ResponseEntity.ok(instructorService.getCurrentLectureCode(instructorId));
+    public ResponseEntity<InstructorCodeResponse> getCurrentLectureCode(@PathVariable Long instructorId) {
+        InstructorCodeResponse response = instructorService.getCurrentLectureCode(instructorId);
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 }

@@ -11,6 +11,7 @@ import com.erolcloud.erolcloud.repository.InstructorRepository;
 import com.erolcloud.erolcloud.repository.LectureRepository;
 import com.erolcloud.erolcloud.repository.StudentRepository;
 import com.erolcloud.erolcloud.response.AttendanceResponse;
+import com.erolcloud.erolcloud.response.InstructorCodeResponse;
 import com.erolcloud.erolcloud.response.LectureResponse;
 import com.erolcloud.erolcloud.response.StudentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class InstructorService {
     }
 
     @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")
-    public String getCurrentLectureCode(Long instructorId) {
+    public InstructorCodeResponse getCurrentLectureCode(Long instructorId) {
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new EntityNotFoundException("Instructor with ID " + instructorId + " not found."));
         List<Lecture> currentDayLectures;
@@ -108,7 +109,7 @@ public class InstructorService {
         for (Course course : instructor.getTeachings()) {
             for (Lecture lecture : currentDayLectures) {
                 if (lecture.getCourse().getId().equals(course.getId())) {
-                    return lecture.getCode();
+                    return new InstructorCodeResponse(lecture.getId(), lecture.getCode());
                 }
             }
         }

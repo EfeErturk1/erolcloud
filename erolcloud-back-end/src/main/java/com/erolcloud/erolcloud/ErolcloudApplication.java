@@ -43,7 +43,7 @@ public class ErolcloudApplication {
 				List<TimeSlot> timeSlots2 = timeSlotRepository.findAllById(List.of(2L, 7L));
 				Course course1 = courseRepository.save(new Course(1, "CS-342", "Operating Systems", timeSlots1));
 				Course course2 = courseRepository.save(new Course(2, "CS-342", "Operating Systems", timeSlots2));
-				lectureRepository.save(new Lecture(course1, LocalDateTime.of(LocalDate.now().plusDays(1), course1.getTimeSlots().get(0).getStartTime()), LocalDateTime.of(LocalDate.now().plusDays(1), course1.getTimeSlots().get(0).getEndTime())));
+				lectureRepository.save(new Lecture(course1, LocalDateTime.of(LocalDate.now(), LocalTime.of(15, 30)), LocalDateTime.of(LocalDate.now(), LocalTime.of(17,20))));
 				lectureRepository.save(new Lecture(course1, LocalDateTime.of(LocalDate.now().plusDays(1), course1.getTimeSlots().get(0).getStartTime()), LocalDateTime.of(LocalDate.now().plusDays(1), course1.getTimeSlots().get(0).getEndTime())));
 				lectureRepository.save(new Lecture(course1, LocalDateTime.of(LocalDate.now(), course1.getTimeSlots().get(0).getStartTime()), LocalDateTime.of(LocalDate.now(), course1.getTimeSlots().get(0).getEndTime())));
 				lectureRepository.save(new Lecture(course1, LocalDateTime.of(LocalDate.now().plusDays(2), course1.getTimeSlots().get(1).getStartTime()), LocalDateTime.of(LocalDate.now().plusDays(2), course1.getTimeSlots().get(1).getEndTime())));

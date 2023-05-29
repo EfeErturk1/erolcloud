@@ -43,9 +43,11 @@ const StudentAttendancesPage = () => {
 
     return (
         <div className='container'>
-            <header className='header d-flex justify-content-end'>
-                <button onClick={() => navigate('/')} className='btn btn-primary'>Home</button>
-            </header>
+            <div className="row mt-4">
+                <div className="col-12">
+                    <button className="btn btn-primary" onClick={() => navigate('/')}>Home</button>
+                </div>
+            </div>
             <main className='main d-flex flex-column align-items-center justify-content-center'>
                 <h1>Attendances</h1>
                 <div className='search-bar'>

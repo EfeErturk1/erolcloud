@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 //import './Page.css';
 
-const StudentAttend = () => {
+const StudentAttendLecturePage = () => {
     let navigate = useNavigate();
     const [code, setCode] = useState("");
     const studentId = localStorage.getItem("id");
@@ -45,18 +45,23 @@ const StudentAttend = () => {
             </div>
             <div className="row mt-4">
                 <div className="col-12 text-center">
-                    <h2>You are currently having X course</h2>
-                    <h2>To register attendance, enter the code that your instructor has displayed below</h2>
+                    <h1>Attend Lecture</h1>
+                    <h3>To register attendance, enter the code that your instructor has displayed below</h3>
                 </div>
             </div>
             <div className="row mt-4">
-                <div className="col-12 text-center">
-                    <input type="text" maxLength="6" className="form-control" placeholder="Enter the 6-digit Attendance code"
-                           onChange={
-                        e => setCode(e.target.value)
-                    }/>
+                <div className="col-12 d-flex justify-content-center">
+                    <input
+                        type="text"
+                        maxLength="6"
+                        className="form-control text-center"
+                        style={{ maxWidth: '400px' }}
+                        placeholder="Enter the 6-digit Attendance code"
+                        onChange={e => setCode(e.target.value)}
+                    />
                 </div>
             </div>
+
             <div className="row mt-4">
                 <div className="col-12 text-center">
                     <button onClick={handleRegister} className="btn btn-primary">Register</button>
@@ -66,4 +71,4 @@ const StudentAttend = () => {
     );
 };
 
-export default StudentAttend;
+export default StudentAttendLecturePage;
