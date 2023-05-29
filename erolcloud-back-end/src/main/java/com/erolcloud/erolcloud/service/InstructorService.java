@@ -10,10 +10,7 @@ import com.erolcloud.erolcloud.repository.CourseRepository;
 import com.erolcloud.erolcloud.repository.InstructorRepository;
 import com.erolcloud.erolcloud.repository.LectureRepository;
 import com.erolcloud.erolcloud.repository.StudentRepository;
-import com.erolcloud.erolcloud.response.AttendanceResponse;
-import com.erolcloud.erolcloud.response.InstructorCodeResponse;
-import com.erolcloud.erolcloud.response.LectureResponse;
-import com.erolcloud.erolcloud.response.StudentResponse;
+import com.erolcloud.erolcloud.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -79,6 +76,13 @@ public class InstructorService {
         return course.getStudents().stream()
                 .map(student -> new StudentResponse(student.getId(), student.getEmail(), student.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")
+    public List<CourseResponse> getInstructorCourses(Long instructorId) {
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new EntityNotFoundException("Instructor with ID " + instructorId + " not found."));
+        return instructor.getTeachings().stream().map(CourseService::getCourseResponse).collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")

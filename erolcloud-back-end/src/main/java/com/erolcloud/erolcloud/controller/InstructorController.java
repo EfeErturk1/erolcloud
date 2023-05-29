@@ -1,6 +1,7 @@
 package com.erolcloud.erolcloud.controller;
 
 import com.erolcloud.erolcloud.response.AttendanceResponse;
+import com.erolcloud.erolcloud.response.CourseResponse;
 import com.erolcloud.erolcloud.response.InstructorCodeResponse;
 import com.erolcloud.erolcloud.response.StudentResponse;
 import com.erolcloud.erolcloud.service.InstructorService;
@@ -39,5 +40,10 @@ public class InstructorController {
         else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/{instructorId}/courses")
+    public ResponseEntity<List<CourseResponse>> getCourseStudents(@PathVariable Long instructorId) {
+        return new ResponseEntity<>(instructorService.getInstructorCourses(instructorId), HttpStatus.OK);
     }
 }
