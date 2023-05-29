@@ -48,6 +48,7 @@ const Login = () => {
                     <img src={Logo}
                          width="260"/>
                 </div>
+                <h1 className='title'>Attendance System</h1>
                 <h5 className="mt-2">Welcome!</h5>
                 <form className='d-flex flex-column justify-content-center align-items-center'
                       onSubmit={handleSubmit}>

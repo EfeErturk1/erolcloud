@@ -52,6 +52,7 @@ const SignUp = () => {
                     <img src={Logo}
                          width="160"/>
                 </div>
+                <h1 className='title'>Attendance System</h1>
                 <div className="mt-4 text-center">
                     <h4>Don't have an account?</h4>
                     <h6>Register now</h6>
