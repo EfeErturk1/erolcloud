@@ -64,11 +64,9 @@ public class StudentController {
     }
 
     @DeleteMapping("/enrollments")
-    public ResponseEntity<?> unenrollCourse(@Valid @RequestBody CourseRequest courseRequest) {
-        studentService.unenrollCourse(courseRequest);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CourseResponse> unenrollCourse(@Valid @RequestBody CourseRequest courseRequest) {
+        return ResponseEntity.ok(studentService.unenrollCourse(courseRequest));
     }
-
 
     @PostMapping("/attendances")
     public ResponseEntity<LectureResponse> attendLecture(@Valid @RequestBody AttendLectureRequest attendLectureRequest) {

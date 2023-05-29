@@ -53,7 +53,7 @@ public class StudentService {
     }
 
     @PreAuthorize("hasAuthority('STUDENT') and #courseRequest.studentId == authentication.principal.id")
-    public void unenrollCourse(CourseRequest courseRequest) {
+    public CourseResponse unenrollCourse(CourseRequest courseRequest) {
         Student student = studentRepository.findById(courseRequest.getStudentId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Student with ID " + courseRequest.getStudentId() + " not found."));
@@ -68,6 +68,7 @@ public class StudentService {
         courses.remove(course);
         student.setCourses(courses);
         studentRepository.save(student);
+        return CourseService.getCourseResponse(course);
     }
 
     @PreAuthorize("hasAuthority('STUDENT') and #attendLectureRequest.studentId == authentication.principal.id")
