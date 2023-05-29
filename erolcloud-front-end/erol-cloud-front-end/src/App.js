@@ -2,7 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import {Login, SignUp, Buffer} from "./Auth";
-import {StudentHomePage, StudentAttend, StudentCoursePage} from "./Pages";
+import {StudentHomePage, StudentAttend, StudentCoursePage, InstructorHomePage} from "./Pages";
+import InstructorTakeAttendance from "./Pages/InstructorPages/InstructorTakeAttendancePage";
 
 function App() {
     if (!localStorage.getItem('token')) {
@@ -41,8 +42,17 @@ function App() {
     } else if (localStorage.role === "INSTRUCTOR") {
         return (
             <div>
-                <h1>ROLE_INSTRUCTOR</h1>
-                {/* Render your instructor-specific routes or components here */}
+                <div>
+                    <div>
+                        <Router>
+                            <Routes>
+                                <Route path="/" element={<InstructorHomePage/>}/>
+                                <Route path="/take-attendance" element={<InstructorTakeAttendance/>}/>
+                                <Route path='/view-attendances' element={<StudentCoursePage/>}/>
+                            </Routes>
+                        </Router>
+                    </div>
+                </div>
             </div>
         );
     }
