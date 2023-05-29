@@ -72,11 +72,16 @@ body {
 }
 
 .course-section {
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .enroll-button {
+    margin-right: 10px;
+}
+
+.enroll-button-gray {
     margin-left: 10px;
+    background-color: #495057;
 }
 
 .enroll-button-container {

@@ -2,12 +2,12 @@ import React, {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom';
 import './StudentCoursePage.css'
 
-// TODO: add enroll logic
-// TODO: add unenroll logic (change button next to enrolled courses
 const StudentCoursePage = () => {
     let navigate = useNavigate()
     const [searchInput, setSearchInput] = useState('')
     const [courses, setCourses] = useState([])
+    const studentId = localStorage.getItem('id')
+    const [enrolledCourses, setEnrolledCourses] = useState([])
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -15,26 +15,77 @@ const StudentCoursePage = () => {
                 const response = await fetch('http://localhost:8080/api/v1/courses', {
                     method: 'GET',
                     headers: {
+                        'Content-type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
                 })
                 const data = await response.json()
                 setCourses(data);
-            } catch (error) {
-                console.log('Error fetching courses:', error)
+            } catch (e) {
+                console.log('Error fetching courses:', e)
             }
-        };
+        }
 
-        fetchCourses();
-    }, []);
+        fetchCourses()
+    }, [])
+
+    useEffect(() => {
+        const fetchEnrolledCourses = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/v1/students/${studentId}/enrollments`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+                const data = await response.json()
+                setEnrolledCourses(data)
+            } catch (e) {
+                console.log('Error fetching enrolled courses:', e)
+            }
+        }
+
+        fetchEnrolledCourses()
+    }, [])
 
     const handleSearch = (event) => {
         setSearchInput(event.target.value)
     }
 
-    const handleEnroll = (courseId) => {
-        // Handle enrollment logic for the selected course
-        console.log(`Enrolling in course ${courseId}`)
+    const isEnrolled = (course) => {
+        for (var i = 0; i < enrolledCourses.length; i++) {
+            if (enrolledCourses[i].id === course.id)
+                return true
+        }
+        return false
+    }
+
+    const handleEnroll = async (courseId, isEnrolled) => {
+        if (!isEnrolled) {
+            try {
+                const response = await fetch('http://localhost:8080/api/v1/students/enrollments', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        'studentId': studentId,
+                        'courseId': courseId
+                    })
+                })
+                const course = await response.json()
+                if (response.ok)
+                    window.alert(`Enrolled in course ${course.code}-${course.section}`)
+                window.location.reload()
+            } catch (e) {
+                console.log('Error enrolling in course:', e)
+            }
+        } else {
+            console.log(`Unenrolled from course ${courseId}`)
+            // TODO unenrolling
+        }
     }
 
 
@@ -68,10 +119,10 @@ const StudentCoursePage = () => {
                             </div>
                             <div className='enroll-button-div'>
                                 <button
-                                    onClick={() => handleEnroll(course.id)}
-                                    className='btn btn-primary enroll-button'
+                                    onClick={() => handleEnroll(course.id, isEnrolled(course))}
+                                    className={`btn btn-primary ${isEnrolled(course) ? 'enroll-button-gray' : 'enroll-button'}`}
                                 >
-                                    Enroll in course
+                                    {isEnrolled(course) ? 'Unenroll from course' : 'Enroll in course'}
                                 </button>
                             </div>
                         </li>
