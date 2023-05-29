@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,5 +78,40 @@ public class InstructorService {
         return course.getStudents().stream()
                 .map(student -> new StudentResponse(student.getId(), student.getEmail(), student.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")
+    public String getCurrentLectureCode(Long instructorId) {
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new EntityNotFoundException("Instructor with ID " + instructorId + " not found."));
+        List<Lecture> currentDayLectures;
+        if (LocalTime.now().isBefore(LocalTime.of(10, 20))) {
+            currentDayLectures = lectureRepository.findAllByStartDateBetween(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.MIN),
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 20)));
+        }
+        else if (LocalTime.now().isBefore(LocalTime.of(12, 20))) {
+            currentDayLectures = lectureRepository.findAllByStartDateBetween(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 20)),
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(12, 20)));
+        }
+        else if (LocalTime.now().isBefore(LocalTime.of(15, 20))) {
+            currentDayLectures = lectureRepository.findAllByStartDateBetween(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(13, 20)),
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(15, 20)));
+        }
+        else {
+            currentDayLectures = lectureRepository.findAllByStartDateBetween(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.of(15, 20)),
+                    LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
+        }
+        for (Course course : instructor.getTeachings()) {
+            for (Lecture lecture : currentDayLectures) {
+                if (lecture.getCourse().getId().equals(course.getId())) {
+                    return lecture.getCode();
+                }
+            }
+        }
+        return null;
     }
 }

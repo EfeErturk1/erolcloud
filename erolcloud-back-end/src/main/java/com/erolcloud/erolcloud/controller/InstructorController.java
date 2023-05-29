@@ -28,4 +28,9 @@ public class InstructorController {
                                                                          @PathVariable Long courseId) {
         return new ResponseEntity<>(instructorService.getCourseAttendances(instructorId, courseId), HttpStatus.OK);
     }
+
+    @GetMapping("/{instructorId}/lectures/current")
+    public ResponseEntity<String> getCurrentLectureCode(@PathVariable Long instructorId) {
+        return ResponseEntity.ok(instructorService.getCurrentLectureCode(instructorId));
+    }
 }
