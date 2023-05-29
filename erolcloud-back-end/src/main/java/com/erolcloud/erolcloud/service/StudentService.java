@@ -8,7 +8,7 @@ import com.erolcloud.erolcloud.repository.CourseRepository;
 import com.erolcloud.erolcloud.repository.LectureRepository;
 import com.erolcloud.erolcloud.repository.StudentRepository;
 import com.erolcloud.erolcloud.request.AttendLectureRequest;
-import com.erolcloud.erolcloud.request.CourseEnrollRequest;
+import com.erolcloud.erolcloud.request.CourseRequest;
 import com.erolcloud.erolcloud.response.LectureResponse;
 import com.erolcloud.erolcloud.response.CourseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +33,14 @@ public class StudentService {
     @Autowired
     private LectureRepository lectureRepository;
 
-    @PreAuthorize("hasAuthority('STUDENT') and #courseEnrollRequest.studentId == authentication.principal.id")
-    public CourseResponse enrollCourse(CourseEnrollRequest courseEnrollRequest) {
-        Student student = studentRepository.findById(courseEnrollRequest.getStudentId())
+    @PreAuthorize("hasAuthority('STUDENT') and #courseRequest.studentId == authentication.principal.id")
+    public CourseResponse enrollCourse(CourseRequest courseRequest) {
+        Student student = studentRepository.findById(courseRequest.getStudentId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Student with ID " + courseEnrollRequest.getStudentId() + " not found."));
-        Course course = courseRepository.findById(courseEnrollRequest.getCourseId())
+                        "Student with ID " + courseRequest.getStudentId() + " not found."));
+        Course course = courseRepository.findById(courseRequest.getCourseId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Course with ID " + courseEnrollRequest.getCourseId() + " not found."));
+                        "Course with ID " + courseRequest.getCourseId() + " not found."));
         List<Course> courses = student.getCourses();
         if (courses.contains(course)) {
             throw new EntityAlreadyExistsException("Student with ID " + student.getId()
@@ -50,6 +50,24 @@ public class StudentService {
         student.setCourses(courses);
         studentRepository.save(student);
         return CourseService.getCourseResponse(course);
+    }
+
+    @PreAuthorize("hasAuthority('STUDENT') and #courseRequest.studentId == authentication.principal.id")
+    public void unenrollCourse(CourseRequest courseRequest) {
+        Student student = studentRepository.findById(courseRequest.getStudentId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Student with ID " + courseRequest.getStudentId() + " not found."));
+        Course course = courseRepository.findById(courseRequest.getCourseId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Course with ID " + courseRequest.getCourseId() + " not found."));
+        List<Course> courses = student.getCourses();
+        if (!courses.contains(course)) {
+            throw new EntityNotFoundException("Student with ID " + student.getId()
+                    + " is not enrolled to the course with ID " + course.getId() + ".");
+        }
+        courses.remove(course);
+        student.setCourses(courses);
+        studentRepository.save(student);
     }
 
     @PreAuthorize("hasAuthority('STUDENT') and #attendLectureRequest.studentId == authentication.principal.id")

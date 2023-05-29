@@ -2,7 +2,7 @@ package com.erolcloud.erolcloud.request;
 
 import javax.validation.constraints.Positive;
 
-public class CourseEnrollRequest {
+public class CourseRequest {
     @Positive
     private Long studentId;
 
