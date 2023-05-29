@@ -54,7 +54,7 @@ const StudentCoursePage = () => {
     }
 
     const isEnrolled = (course) => {
-        for (var i = 0; i < enrolledCourses.length; i++) {
+        for (let i = 0; i < enrolledCourses.length; i++) {
             if (enrolledCourses[i].id === course.id)
                 return true
         }
