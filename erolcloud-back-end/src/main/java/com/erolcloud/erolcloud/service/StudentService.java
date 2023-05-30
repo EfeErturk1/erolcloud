@@ -9,10 +9,7 @@ import com.erolcloud.erolcloud.repository.LectureRepository;
 import com.erolcloud.erolcloud.repository.StudentRepository;
 import com.erolcloud.erolcloud.request.AttendLectureRequest;
 import com.erolcloud.erolcloud.request.CourseRequest;
-import com.erolcloud.erolcloud.response.LectureResponse;
-import com.erolcloud.erolcloud.response.CourseResponse;
-import com.erolcloud.erolcloud.response.StudentAttendanceResponse;
-import com.erolcloud.erolcloud.response.StudentLectureResponse;
+import com.erolcloud.erolcloud.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -72,6 +69,30 @@ public class StudentService {
         studentRepository.save(student);
         return CourseService.getCourseResponse(course);
     }
+
+    @PreAuthorize("hasAuthority('STUDENT') and #studentId == authentication.principal.id")
+    public StudentCourseAttendanceResponse getCourseAttendanceRecords(Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException(
+                        "Student with ID " + studentId + " not found."));
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException(
+                        "Course with ID " + courseId + " not found."));
+        List<Lecture> totalLectures = lectureRepository.findByCourse(course);
+        List<StudentLectureResponse> studentLectureResponses = new ArrayList<>();
+        for (Lecture lecture : totalLectures) {
+            if (student.getAttendances().contains(lecture)) {
+                studentLectureResponses.add(new StudentLectureResponse(
+                        new LectureResponse(lecture.getId(), lecture.getStartDate(), lecture.getEndDate(),
+                                CourseService.getCourseResponse(lecture.getCourse())), true));
+            }
+            else {
+                studentLectureResponses.add(new StudentLectureResponse(
+                        new LectureResponse(lecture.getId(), lecture.getStartDate(), lecture.getEndDate(),
+                                CourseService.getCourseResponse(lecture.getCourse())), false));
+            }
+        }
+        return new StudentCourseAttendanceResponse(studentId, courseId, studentLectureResponses);
+    }
+
 
     @PreAuthorize("hasAuthority('STUDENT') and #studentId == authentication.principal.id")
     public StudentAttendanceResponse getAttendanceRecords(Long studentId) {

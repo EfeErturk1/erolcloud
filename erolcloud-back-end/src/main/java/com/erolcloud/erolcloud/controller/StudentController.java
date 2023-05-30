@@ -5,6 +5,7 @@ import com.erolcloud.erolcloud.request.CourseRequest;
 import com.erolcloud.erolcloud.response.LectureResponse;
 import com.erolcloud.erolcloud.response.CourseResponse;
 import com.erolcloud.erolcloud.response.StudentAttendanceResponse;
+import com.erolcloud.erolcloud.response.StudentCourseAttendanceResponse;
 import com.erolcloud.erolcloud.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,6 +51,12 @@ public class StudentController {
         else {
             return ResponseEntity.ok(lectureResponse);
         }
+    }
+
+    @GetMapping("/{studentId}/attendances/courses/{courseId}")
+    public ResponseEntity<StudentCourseAttendanceResponse> getCourseAttendances(@PathVariable Long studentId,
+                                                                                @PathVariable Long courseId) {
+        return ResponseEntity.ok(studentService.getCourseAttendanceRecords(studentId, courseId));
     }
 
     @PutMapping("/{studentId}/attendCurrentLecture/{code}")
