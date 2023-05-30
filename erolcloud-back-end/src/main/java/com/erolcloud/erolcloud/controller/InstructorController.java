@@ -1,9 +1,6 @@
 package com.erolcloud.erolcloud.controller;
 
-import com.erolcloud.erolcloud.response.AttendanceResponse;
-import com.erolcloud.erolcloud.response.CourseResponse;
-import com.erolcloud.erolcloud.response.InstructorCodeResponse;
-import com.erolcloud.erolcloud.response.StudentResponse;
+import com.erolcloud.erolcloud.response.*;
 import com.erolcloud.erolcloud.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +37,11 @@ public class InstructorController {
         else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/{instructorId}/attendances")
+    public ResponseEntity<InstructorAttendanceResponse> getTotalAttendances(@PathVariable Long instructorId) {
+        return ResponseEntity.ok(instructorService.getStudentAttendanceRecords(instructorId));
     }
 
     @GetMapping("/{instructorId}/courses")

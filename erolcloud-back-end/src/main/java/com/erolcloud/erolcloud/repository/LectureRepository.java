@@ -10,5 +10,7 @@ import java.util.List;
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
     List<Lecture> findByCourse(Course course);
 
+    List<Lecture> findByCourseIn(List<Course> courses);
+
     List<Lecture> findAllByStartDateBetween(LocalDateTime startTime, LocalDateTime endTime);
 }

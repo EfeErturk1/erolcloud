@@ -11,6 +11,8 @@ import com.erolcloud.erolcloud.request.AttendLectureRequest;
 import com.erolcloud.erolcloud.request.CourseRequest;
 import com.erolcloud.erolcloud.response.LectureResponse;
 import com.erolcloud.erolcloud.response.CourseResponse;
+import com.erolcloud.erolcloud.response.StudentAttendanceResponse;
+import com.erolcloud.erolcloud.response.StudentLectureResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -69,6 +71,28 @@ public class StudentService {
         student.setCourses(courses);
         studentRepository.save(student);
         return CourseService.getCourseResponse(course);
+    }
+
+    @PreAuthorize("hasAuthority('STUDENT') and #studentId == authentication.principal.id")
+    public StudentAttendanceResponse getAttendanceRecords(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException("Student with ID " + studentId + " not found."));
+        List<Course> courses = student.getCourses();
+        List<Lecture> totalLectures = lectureRepository.findByCourseIn(courses);
+        List<StudentLectureResponse> studentLectureResponses = new ArrayList<>();
+        for (Lecture lecture : totalLectures) {
+            if (student.getAttendances().contains(lecture)) {
+                studentLectureResponses.add(new StudentLectureResponse(
+                        new LectureResponse(lecture.getId(), lecture.getStartDate(), lecture.getEndDate(),
+                                CourseService.getCourseResponse(lecture.getCourse())), true));
+            }
+            else {
+                studentLectureResponses.add(new StudentLectureResponse(
+                        new LectureResponse(lecture.getId(), lecture.getStartDate(), lecture.getEndDate(),
+                                CourseService.getCourseResponse(lecture.getCourse())), false));
+            }
+        }
+        return new StudentAttendanceResponse(studentId, studentLectureResponses);
     }
 
     @PreAuthorize("hasAuthority('STUDENT') and #attendLectureRequest.studentId == authentication.principal.id")

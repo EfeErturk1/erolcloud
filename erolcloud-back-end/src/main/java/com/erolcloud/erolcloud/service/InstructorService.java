@@ -79,6 +79,32 @@ public class InstructorService {
     }
 
     @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")
+    public InstructorAttendanceResponse getStudentAttendanceRecords(Long instructorId) {
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new EntityNotFoundException("Instructor with ID " + instructorId + " not found."));
+        List<Course> instructorCourses = instructor.getTeachings();
+        List<Lecture> totalLectures = lectureRepository.findByCourseIn(instructorCourses);
+        List<InstructorLectureResponse> lectureResponses = new ArrayList<>();
+        for (Lecture lecture: totalLectures) {
+            List<InstructorLectureStudentResponse> studentResponses = new ArrayList<>();
+            for (Student student : lecture.getCourse().getStudents()) {
+                if (student.getAttendances().contains(lecture)) {
+                    studentResponses.add(new InstructorLectureStudentResponse(
+                            new StudentResponse(student.getId(), student.getEmail(), student.getName()), true));
+                }
+                else {
+                    studentResponses.add(new InstructorLectureStudentResponse(
+                            new StudentResponse(student.getId(), student.getEmail(), student.getName()), false));
+                }
+            }
+            lectureResponses.add(new InstructorLectureResponse(
+                    new LectureResponse(lecture.getId(), lecture.getStartDate(), lecture.getEndDate(),
+                            CourseService.getCourseResponse(lecture.getCourse())), studentResponses));
+        }
+        return new InstructorAttendanceResponse(instructorId, lectureResponses);
+    }
+
+    @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")
     public List<CourseResponse> getInstructorCourses(Long instructorId) {
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new EntityNotFoundException("Instructor with ID " + instructorId + " not found."));

@@ -4,6 +4,7 @@ import com.erolcloud.erolcloud.request.AttendLectureRequest;
 import com.erolcloud.erolcloud.request.CourseRequest;
 import com.erolcloud.erolcloud.response.LectureResponse;
 import com.erolcloud.erolcloud.response.CourseResponse;
+import com.erolcloud.erolcloud.response.StudentAttendanceResponse;
 import com.erolcloud.erolcloud.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,11 @@ public class StudentController {
     @GetMapping("/{studentId}/attendances")
     public ResponseEntity<List<LectureResponse>> getAttendances(@PathVariable Long studentId) {
         return new ResponseEntity<>(studentService.getAttendances(studentId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{studentId}/attendanceRecord")
+    public ResponseEntity<StudentAttendanceResponse> getAttendanceRecord(@PathVariable Long studentId) {
+        return new ResponseEntity<>(studentService.getAttendanceRecords(studentId), HttpStatus.OK);
     }
 
     @GetMapping("/{studentId}/enrollments")
