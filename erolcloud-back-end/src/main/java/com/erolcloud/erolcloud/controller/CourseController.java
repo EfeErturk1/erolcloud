@@ -26,5 +26,10 @@ public class CourseController {
         return new ResponseEntity<>(courseService.getCourse(courseId), HttpStatus.OK);
     }
 
+    @GetMapping("/{courseId}/time-slots")
+    public ResponseEntity<String> getCourseTimeSlots(@PathVariable Long courseId) {
+        return new ResponseEntity<>(courseService.getCourseTimeSlots(courseId), HttpStatus.OK);
+    }
+
 
 }

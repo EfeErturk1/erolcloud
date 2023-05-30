@@ -6,6 +6,7 @@ const StudentAttendanceDetailsPage = () => {
     let navigate = useNavigate()
     const {courseId} = useParams()
     const [course, setCourse] = useState(null)
+    const [timeSlots, setTimeSlots] = useState([])
 
     useEffect( () => {
         const fetchCourse = async () => {
@@ -29,6 +30,29 @@ const StudentAttendanceDetailsPage = () => {
         }
 
         fetchCourse()
+
+        const fetchTimeSlots = async () => {
+            try {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/courses/${courseId}/time-slots`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+
+                const data = await response.json()
+                if (response.ok) {
+                    console.log('data: ' + data)
+                    setTimeSlots(data)
+                }
+            } catch (e) {
+                console.log('Error fetching course:', e)
+            }
+        }
+
+        fetchTimeSlots()
+
     }, [])
 
     if (!course) {
@@ -60,7 +84,7 @@ const StudentAttendanceDetailsPage = () => {
                         <strong>Instructor:</strong> TODO
                     </div>
                     <div className='course-info'>
-                        <strong>Time slots:</strong> TODO
+                        <strong>Time slots:</strong> {timeSlots}
                     </div>
                 </div>
                 <div className='course-info-container attendance-info-container'>

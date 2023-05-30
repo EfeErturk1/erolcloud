@@ -61,7 +61,7 @@ const InstructorAttendanceDetailsPage = () => {
     }
 
     const filteredLectures = lectures.filter((lecture) => {
-        return lecture.lecture.course.id == courseId
+        return lecture.lecture.course.id === courseId
     })
     console.log(filteredLectures)
 

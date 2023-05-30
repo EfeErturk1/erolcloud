@@ -41,4 +41,12 @@ public class CourseService {
                 .collect(Collectors.toList());
         return new CourseResponse(course.getId(), course.getSection(), course.getCode(), course.getName(), timeSlotResponses);
     }
+
+    public String getCourseTimeSlots(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Course with ID " + courseId + " not found."));
+        return course.getTimeSlots().stream()
+                .map(timeslot -> DayOfWeek.of(timeslot.getDayOfWeek()).name() + " " + timeslot.getStartTime() + " - " + timeslot.getEndTime())
+                .collect(Collectors.joining(", "));
+    }
 }
