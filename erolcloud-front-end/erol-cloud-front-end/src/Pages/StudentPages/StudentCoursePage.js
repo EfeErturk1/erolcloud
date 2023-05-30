@@ -136,9 +136,8 @@ const StudentCoursePage = () => {
                     {filteredCourses.map((course) => (
                         <li key={course.id}>
                             <div className='course-details'>
-                                <span className='course-code'>{course.code}</span>
+                                <span className='course-code'>{course.code}-{course.section}</span>
                                 <span className='course-name'>{course.name}</span>
-                                <span className='course-section'>Section {course.section}</span>
                             </div>
                             <div className='enroll-button-div'>
                                 <button

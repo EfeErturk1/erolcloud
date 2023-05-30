@@ -4,7 +4,7 @@ import './StudentHomePage.css';
 
 const StudentHomePage = () => {
     let navigate = useNavigate();
-    console.log(localStorage.getItem('accessToken'));
+    console.log('token:'+ localStorage.getItem('token'));
 
     const handleLogout = () => {
         localStorage.clear();//removeItem('accessToken'); // Clear the access token from localStorage

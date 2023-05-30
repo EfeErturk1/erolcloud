@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 const StudentAttendancesPage = () => {
     let navigate = useNavigate()
@@ -37,8 +37,7 @@ const StudentAttendancesPage = () => {
     )
 
     const handleViewAttendance = (courseId) => {
-        // TODO go to course attendance page
-        console.log('View attendance data for ' + courseId)
+        navigate(`/attendance-details/${courseId}`)
     }
 
     return (
@@ -62,9 +61,8 @@ const StudentAttendancesPage = () => {
                     {filteredCourses.map((course) => (
                         <li key={course.id}>
                             <div className='course-details'>
-                                <span className='course-code'>{course.code}</span>
+                                <span className='course-code'>{course.code}-{course.section}</span>
                                 <span className='course-name'>{course.name}</span>
-                                <span className='course-section'>Section {course.section}</span>
                             </div>
                             <div className='view-button-div'>
                                 <button

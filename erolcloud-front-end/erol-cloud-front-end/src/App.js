@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import {Login, SignUp, Buffer} from "./Auth";
-import {StudentHomePage, StudentAttendLecturePage, StudentAttendancesPage, StudentCoursePage, InstructorHomePage, InstructorAttendancesPage} from "./Pages";
+import {StudentHomePage, StudentAttendLecturePage, StudentAttendancesPage, StudentCoursePage, StudentAttendanceDetailsPage, InstructorHomePage, InstructorAttendancesPage} from "./Pages";
 import InstructorTakeAttendance from "./Pages/InstructorPages/InstructorTakeAttendancePage";
 
 function App() {
@@ -35,6 +35,7 @@ function App() {
                             <Route path="/attend" element={<StudentAttendLecturePage/>}/>
                             <Route path='/enroll' element={<StudentCoursePage/>}/>
                             <Route path='/attendances' element={<StudentAttendancesPage/>}/>
+                            <Route path='/attendance-details/:courseId' element={<StudentAttendanceDetailsPage/>}/>
                         </Routes>
                     </Router>
                 </div>
