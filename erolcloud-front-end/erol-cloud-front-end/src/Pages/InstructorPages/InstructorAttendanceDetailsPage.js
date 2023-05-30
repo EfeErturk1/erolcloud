@@ -8,6 +8,8 @@ const InstructorAttendanceDetailsPage = () => {
     const [course, setCourse] = useState(null)
     const [lectures, setLectures] = useState([])
     const instructorId = localStorage.getItem('id')
+    const [showPopup, setShowPopup] = useState(false);
+    const [students, setStudents] = useState([]);
 
     useEffect( () => {
         const fetchCourse = async () => {
@@ -59,7 +61,6 @@ const InstructorAttendanceDetailsPage = () => {
     }
 
     const filteredLectures = lectures.filter((lecture) => {
-        // console.log(lecture.lecture.course.id)
         return lecture.lecture.course.id == courseId
     })
     console.log(filteredLectures)
@@ -76,6 +77,14 @@ const InstructorAttendanceDetailsPage = () => {
     const parseTime = (datetime) => {
         const time = datetime.substring(datetime.indexOf('T') + 1, datetime.length - 3)
         return time
+    }
+
+    const viewAttendedStudents = (lecture) => {
+        setShowPopup(true)
+    }
+
+    const handleClosePopup = () => {
+        setShowPopup(false)
     }
 
     return (
@@ -115,12 +124,24 @@ const InstructorAttendanceDetailsPage = () => {
                                     <span>
                                         {parseDate(lecture.lecture.lectureStartDate)}, {parseTime(lecture.lecture.lectureStartDate)} - {parseTime(lecture.lecture.lectureEndDate)}
                                     </span>
-                                    <button className='btn btn-primary'>View attended students</button>
+                                    <button className='btn btn-primary' onClick={() => {
+                                        viewAttendedStudents(lecture.lecture)
+                                    }}>View attended students</button>
                                 </div>
                             </li>
                         ))}
                     </ul>
                 </div>
+                {showPopup && (
+                    <div className="popup">
+                        <div className="popup-content">
+                            <h3>Attended Students</h3>
+                            <button className="btn btn-primary" onClick={handleClosePopup}>
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     )
