@@ -1,16 +1,16 @@
 import React, {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom';
 
-const StudentAttendancesPage = () => {
+const InstructorAttendancesPage = () => {
     let navigate = useNavigate()
-    const [enrolledCourses, setEnrolledCourses] = useState([])
+    const [courses, setCourses] = useState([])
     const [searchInput, setSearchInput] = useState('')
-    const studentId = localStorage.getItem('id')
+    const instructorId = localStorage.getItem('id')
 
     useEffect(() => {
-        const fetchEnrolledCourses = async () => {
+        const fetchCourses = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/students/${studentId}/enrollments`, {
+                const response = await fetch(`http://localhost:8080/api/v1/instructors/${instructorId}/courses`, {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
@@ -18,20 +18,20 @@ const StudentAttendancesPage = () => {
                     }
                 })
                 const data = await response.json()
-                setEnrolledCourses(data)
+                setCourses(data)
             } catch (e) {
-                console.log('Error fetching enrolled courses:', e)
+                console.log('Error fetching courses:', e)
             }
         }
 
-        fetchEnrolledCourses()
+        fetchCourses()
     }, [])
 
     const handleSearch = (event) => {
         setSearchInput(event.target.value)
     }
 
-    const filteredCourses = enrolledCourses.filter((course) =>
+    const filteredCourses = courses.filter((course) =>
         course.code.toLowerCase().includes(searchInput.toLowerCase()) ||
         course.name.toLowerCase().includes(searchInput.toLowerCase())
     )
@@ -82,4 +82,4 @@ const StudentAttendancesPage = () => {
     )
 }
 
-export default StudentAttendancesPage
+export default InstructorAttendancesPage

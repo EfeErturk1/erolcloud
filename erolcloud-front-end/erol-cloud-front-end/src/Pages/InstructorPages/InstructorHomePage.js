@@ -14,7 +14,8 @@ const InstructorHomePage = () => {
 
     return (
         <div className="container">
-            <header className="header d-flex justify-content-end">
+            <header className="header d-flex">
+                <h1 className='page-title'>Attendance System</h1>
                 <button onClick={handleLogout} className="btn btn-primary">Logout</button>
             </header>
             <main className="main d-flex flex-column align-items-center justify-content-center">
