@@ -23,7 +23,7 @@ const SignUp = () => {
         } else {
             event.preventDefault();
 
-            fetch("http://localhost:8080/api/v1/authentication/register", {
+            fetch("https://erolcloud-back-end.uc.r.appspot.com/api/v1/authentication/register", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",

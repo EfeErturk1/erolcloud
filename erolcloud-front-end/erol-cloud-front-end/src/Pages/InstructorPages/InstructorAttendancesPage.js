@@ -10,7 +10,7 @@ const InstructorAttendancesPage = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/instructors/${instructorId}/courses`, {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/${instructorId}/courses`, {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',

@@ -12,7 +12,7 @@ const StudentCoursePage = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/v1/courses', {
+                const response = await fetch('https://erolcloud-back-end.uc.r.appspot.com/api/v1/courses', {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
@@ -32,7 +32,7 @@ const StudentCoursePage = () => {
     useEffect(() => {
         const fetchEnrolledCourses = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/students/${studentId}/enrollments`, {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/students/${studentId}/enrollments`, {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
@@ -65,7 +65,7 @@ const StudentCoursePage = () => {
         const enrolled = isEnrolled(courseId)
         if (!enrolled) {
             try {
-                const response = await fetch('http://localhost:8080/api/v1/students/enrollments', {
+                const response = await fetch('https://erolcloud-back-end.uc.r.appspot.com/api/v1/students/enrollments', {
                     method: 'PUT',
                     headers: {
                         'Content-type': 'application/json',
@@ -86,7 +86,7 @@ const StudentCoursePage = () => {
             }
         } else {
             try {
-                const response = await fetch('http://localhost:8080/api/v1/students/enrollments', {
+                const response = await fetch('https://erolcloud-back-end.uc.r.appspot.com/api/v1/students/enrollments', {
                     method: 'DELETE',
                     headers: {
                         'Content-type': 'application/json',

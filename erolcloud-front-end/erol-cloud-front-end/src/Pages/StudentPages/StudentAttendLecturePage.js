@@ -10,7 +10,7 @@ const StudentAttendLecturePage = () => {
         if (code.length !== 6) {
             window.alert("Please enter a valid code");
         } else {
-            fetch("http://localhost:8080/api/v1/students/"+studentId+"/attendCurrentLecture/"+code, {
+            fetch("https://erolcloud-back-end.uc.r.appspot.com/api/v1/students/"+studentId+"/attendCurrentLecture/"+code, {
                 method: "PUT",
                 headers: {
                     "Content-type": "application/json",

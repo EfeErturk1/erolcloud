@@ -4,13 +4,13 @@ import {useNavigate} from "react-router-dom";
 
 const InstructorTakeAttendance = () => {
     let navigate = useNavigate();
-    const [code, setCode] = useState("LOLO No code exists");
+    const [code, setCode] = useState("No code exists");
     const instructorId = localStorage.getItem("id");
 
     useEffect(() => {
     const displayCode = async () => {
         try {
-            const response = fetch("http://localhost:8080/api/v1/instructors/" + instructorId + "/lectures/current", {
+            const response = fetch("https://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/" + instructorId + "/lectures/current", {
                 method: "GET",
                 headers: {
                     "Content-type": "application/json",

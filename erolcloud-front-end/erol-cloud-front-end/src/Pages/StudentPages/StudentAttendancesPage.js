@@ -10,7 +10,7 @@ const StudentAttendancesPage = () => {
     useEffect(() => {
         const fetchEnrolledCourses = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/students/${studentId}/enrollments`, {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/students/${studentId}/enrollments`, {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
