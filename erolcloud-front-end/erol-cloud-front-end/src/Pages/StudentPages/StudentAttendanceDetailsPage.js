@@ -4,10 +4,12 @@ import './StudentAttendanceDetails.css'
 
 const StudentAttendanceDetailsPage = () => {
     let navigate = useNavigate()
+    const studentId = localStorage.getItem('id')
     const {courseId} = useParams()
     const [course, setCourse] = useState(null)
     const [timeSlots, setTimeSlots] = useState([])
     const [instructor, setInstructor] = useState(null)
+    const [attendances, setAttendances] = useState([])
 
     useEffect( () => {
         const fetchCourse = async () => {
@@ -22,7 +24,7 @@ const StudentAttendanceDetailsPage = () => {
 
                 const data = await response.json()
                 if (response.ok) {
-                    console.log('data: ' + data)
+                    console.log('course: ' + data)
                     setCourse(data)
                 }
             } catch (e) {
@@ -44,7 +46,7 @@ const StudentAttendanceDetailsPage = () => {
 
                 const data = await response.json()
                 if (response.ok) {
-                    console.log('data: ' + data)
+                    console.log('timeslots: ' + data)
                     setTimeSlots(data)
                 }
             } catch (e) {
@@ -67,16 +69,37 @@ const StudentAttendanceDetailsPage = () => {
 
                 const data = await response.json()
                 if (response.ok) {
-                    console.log('data: ' + data)
-                    setInstructor(data)
+                    console.log('instructor: ' + data.name)
+                    setInstructor(data.name)
                 }
             } catch (e) {
                 console.log('Error fetching course:', e)
             }
         }
 
-        //fetchTInstructor()
+        fetchTInstructor()
 
+        const fetchAttendances = async () => {
+            try {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/student/${studentId}/attendances/courses/${courseId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+
+                const data = await response.json()
+                if (response.ok) {
+                    console.log('data: ' + data)
+                    setAttendances(data)
+                }
+            } catch (e) {
+                console.log('Error fetching course:', e)
+            }
+        }
+
+        fetchAttendances()
 
     }, [])
 
@@ -106,7 +129,7 @@ const StudentAttendanceDetailsPage = () => {
                         <strong>Section number:</strong> {course.section}
                     </div>
                     <div className='course-info'>
-                        <strong>Instructor:</strong> {instructor.name}
+                        <strong>Instructor:</strong> {instructor}
                     </div>
                     <div className='course-info'>
                         <strong>Time slots:</strong> {timeSlots}
@@ -114,8 +137,26 @@ const StudentAttendanceDetailsPage = () => {
                 </div>
                 <div className='course-info-container attendance-info-container'>
                     <h2>Attendance Information</h2>
-                    TODO
+                    {attendances && attendances.attendances ? (
+                        <ul>
+                            {attendances.attendances.map((lecture) => (
+                                <li key={lecture.id}>
+                                    <div>
+                                        <span>Lecture Start Date: {lecture.lectureStartDate}</span>
+                                    </div>
+                                    <div>
+                                        <span>Lecture End Date: {lecture.lectureEndDate}</span>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No attendance data available.</p>
+                    )}
                 </div>
+
+
+
             </main>
         </div>
     )
