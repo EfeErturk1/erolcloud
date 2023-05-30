@@ -6,6 +6,8 @@ const InstructorAttendanceDetailsPage = () => {
     let navigate = useNavigate()
     const {courseId} = useParams()
     const [course, setCourse] = useState(null)
+    const [lectures, setLectures] = useState([])
+    const instructorId = localStorage.getItem('id')
 
     useEffect( () => {
         const fetchCourse = async () => {
@@ -20,7 +22,6 @@ const InstructorAttendanceDetailsPage = () => {
 
                 const data = await response.json()
                 if (response.ok) {
-                    console.log('data: ' + data)
                     setCourse(data)
                 }
             } catch (e) {
@@ -31,8 +32,50 @@ const InstructorAttendanceDetailsPage = () => {
         fetchCourse()
     }, [])
 
+    useEffect(() => {
+        const fetchLectures = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/v1/instructors/${instructorId}/attendances`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+                const data = await response.json()
+                if (response.ok) {
+                    setLectures(data.lectures)
+                }
+            } catch (e) {
+                console.log('Error fetching lectures:', e)
+            }
+        }
+
+        fetchLectures()
+    }, [])
+
     if (!course) {
         return <div>Loading...</div>;
+    }
+
+    const filteredLectures = lectures.filter((lecture) => {
+        // console.log(lecture.lecture.course.id)
+        return lecture.lecture.course.id == courseId
+    })
+    console.log(filteredLectures)
+
+    const parseDate = (datetime) => {
+        const date = datetime.substring(0, datetime.indexOf('T'))
+        const day = date.substring(8, 10)
+        const month = date.substring(5, 7)
+        const year = date.substring(0, 4)
+
+        return `${day}.${month}.${year}`
+    }
+
+    const parseTime = (datetime) => {
+        const time = datetime.substring(datetime.indexOf('T') + 1, datetime.length - 3)
+        return time
     }
 
     return (
@@ -65,7 +108,18 @@ const InstructorAttendanceDetailsPage = () => {
                 </div>
                 <div className='course-info-container attendance-info-container'>
                     <h2>Attendance Information</h2>
-                    TODO
+                    <ul className='lecture-list'>
+                        {filteredLectures.map((lecture) => (
+                            <li key={lecture.lecture.id} className='attendance-item'>
+                                <div className='attendance-item-div'>
+                                    <span>
+                                        {parseDate(lecture.lecture.lectureStartDate)}, {parseTime(lecture.lecture.lectureStartDate)} - {parseTime(lecture.lecture.lectureEndDate)}
+                                    </span>
+                                    <button className='btn btn-primary'>View attended students</button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </main>
         </div>
