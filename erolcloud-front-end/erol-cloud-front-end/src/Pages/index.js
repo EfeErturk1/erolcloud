@@ -6,9 +6,9 @@ import StudentAttendanceDetailsPage from "./StudentPages/StudentAttendanceDetail
 import InstructorHomePage from "./InstructorPages/InstructorHomePage";
 import InstructorTakeAttendancePage from "./InstructorPages/InstructorTakeAttendancePage";
 import InstructorAttendancesPage from "./InstructorPages/InstructorAttendancesPage";
-
+import InstructorAttendanceDetailsPage from "./InstructorPages/InstructorAttendanceDetailsPage";
 
 export {
     StudentHomePage, StudentAttendLecturePage, StudentCoursePage, StudentAttendancesPage, StudentAttendanceDetailsPage,
-    InstructorHomePage, InstructorTakeAttendancePage, InstructorAttendancesPage
+    InstructorHomePage, InstructorTakeAttendancePage, InstructorAttendancesPage, InstructorAttendanceDetailsPage
 }

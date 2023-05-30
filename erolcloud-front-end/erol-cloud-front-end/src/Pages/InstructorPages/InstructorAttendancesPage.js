@@ -37,8 +37,7 @@ const InstructorAttendancesPage = () => {
     )
 
     const handleViewAttendance = (courseId) => {
-        // TODO go to course attendance page
-        console.log('View attendance data for ' + courseId)
+        navigate(`/attendance-details/${courseId}`)
     }
 
     return (

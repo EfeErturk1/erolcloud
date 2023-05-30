@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import {Login, SignUp, Buffer} from "./Auth";
 import {StudentHomePage, StudentAttendLecturePage, StudentAttendancesPage, StudentCoursePage, StudentAttendanceDetailsPage, InstructorHomePage, InstructorAttendancesPage} from "./Pages";
 import InstructorTakeAttendance from "./Pages/InstructorPages/InstructorTakeAttendancePage";
+import {InstructorAttendanceDetailsPage} from "./Pages";
 
 function App() {
     if (!localStorage.getItem('token')) {
@@ -51,6 +52,7 @@ function App() {
                                 <Route path="/" element={<InstructorHomePage/>}/>
                                 <Route path="/take-attendance" element={<InstructorTakeAttendance/>}/>
                                 <Route path='/view-attendances' element={<InstructorAttendancesPage/>}/>
+                                <Route path='/attendance-details/:courseId' element={<InstructorAttendanceDetailsPage/>}/>
                             </Routes>
                         </Router>
                     </div>
