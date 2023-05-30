@@ -17,8 +17,8 @@ public class InstructorController {
     private InstructorService instructorService;
 
     @GetMapping("/{instructorId}/courses/{courseId}/students")
-    public ResponseEntity<List<StudentResponse>> getCourseStudents(@PathVariable Long instructorId,
-                                                                   @PathVariable Long courseId) {
+    public ResponseEntity<List<UserResponse>> getCourseStudents(@PathVariable Long instructorId,
+                                                                @PathVariable Long courseId) {
         return new ResponseEntity<>(instructorService.getCourseStudents(instructorId, courseId), HttpStatus.OK);
     }
 

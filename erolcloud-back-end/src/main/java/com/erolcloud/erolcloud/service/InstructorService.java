@@ -58,13 +58,13 @@ public class InstructorService {
                 }
             }
             attendanceResponses.add(new AttendanceResponse(
-                    new StudentResponse(student.getId(), student.getEmail(), student.getName()), lectureResponses));
+                    new UserResponse(student.getId(), student.getEmail(), student.getName()), lectureResponses));
         }
         return attendanceResponses;
     }
 
     @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")
-    public List<StudentResponse> getCourseStudents(Long instructorId, Long courseId) {
+    public List<UserResponse> getCourseStudents(Long instructorId, Long courseId) {
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new EntityNotFoundException("Instructor with ID " + instructorId + " not found."));
         Course course = courseRepository.findById(courseId)
@@ -74,7 +74,7 @@ public class InstructorService {
                     "Course with ID " + courseId + " is not taught by instructor with ID " + instructorId + ".");
         }
         return course.getStudents().stream()
-                .map(student -> new StudentResponse(student.getId(), student.getEmail(), student.getName()))
+                .map(student -> new UserResponse(student.getId(), student.getEmail(), student.getName()))
                 .collect(Collectors.toList());
     }
 
@@ -90,11 +90,11 @@ public class InstructorService {
             for (Student student : lecture.getCourse().getStudents()) {
                 if (student.getAttendances().contains(lecture)) {
                     studentResponses.add(new InstructorLectureStudentResponse(
-                            new StudentResponse(student.getId(), student.getEmail(), student.getName()), true));
+                            new UserResponse(student.getId(), student.getEmail(), student.getName()), true));
                 }
                 else {
                     studentResponses.add(new InstructorLectureStudentResponse(
-                            new StudentResponse(student.getId(), student.getEmail(), student.getName()), false));
+                            new UserResponse(student.getId(), student.getEmail(), student.getName()), false));
                 }
             }
             lectureResponses.add(new InstructorLectureResponse(

@@ -1,11 +1,14 @@
 package com.erolcloud.erolcloud.service;
 
 import com.erolcloud.erolcloud.entity.Course;
+import com.erolcloud.erolcloud.entity.Instructor;
 import com.erolcloud.erolcloud.exception.EntityNotFoundException;
 import com.erolcloud.erolcloud.repository.CourseRepository;
+import com.erolcloud.erolcloud.repository.InstructorRepository;
 import com.erolcloud.erolcloud.repository.StudentRepository;
 import com.erolcloud.erolcloud.response.CourseResponse;
 import com.erolcloud.erolcloud.response.TimeSlotResponse;
+import com.erolcloud.erolcloud.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -22,9 +25,24 @@ public class CourseService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private InstructorRepository instructorRepository;
+
     @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR', 'STUDENT')")
     public List<CourseResponse> getCourses() {
         return courseRepository.findAll().stream().map(CourseService::getCourseResponse).collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR', 'STUDENT')")
+    public UserResponse getInstructor(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Course with ID " + courseId + " not found."));
+        for (Instructor instructor : instructorRepository.findAll()) {
+            if (instructor.getTeachings().contains(course)) {
+                return new UserResponse(instructor.getId(), instructor.getEmail(), instructor.getName());
+            }
+        }
+        throw new EntityNotFoundException("This course does not have an instructor!");
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR', 'STUDENT')")
