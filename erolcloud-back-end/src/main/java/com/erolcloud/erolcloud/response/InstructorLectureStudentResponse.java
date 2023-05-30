@@ -1,16 +1,16 @@
 package com.erolcloud.erolcloud.response;
 
 public class InstructorLectureStudentResponse {
-    private final StudentResponse student;
+    private final UserResponse student;
 
     private final Boolean attended;
 
-    public InstructorLectureStudentResponse(StudentResponse student, Boolean attended) {
+    public InstructorLectureStudentResponse(UserResponse student, Boolean attended) {
         this.student = student;
         this.attended = attended;
     }
 
-    public StudentResponse getStudent() {
+    public UserResponse getStudent() {
         return student;
     }
 

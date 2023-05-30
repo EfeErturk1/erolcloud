@@ -1,6 +1,7 @@
 package com.erolcloud.erolcloud.controller;
 
 import com.erolcloud.erolcloud.response.CourseResponse;
+import com.erolcloud.erolcloud.response.UserResponse;
 import com.erolcloud.erolcloud.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,11 @@ public class CourseController {
     @GetMapping("/{courseId}/time-slots")
     public ResponseEntity<String> getCourseTimeSlots(@PathVariable Long courseId) {
         return new ResponseEntity<>(courseService.getCourseTimeSlots(courseId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{courseId}/instructor")
+    public ResponseEntity<UserResponse> getInstructor(@PathVariable Long courseId) {
+        return ResponseEntity.ok(courseService.getInstructor(courseId));
     }
 
 
