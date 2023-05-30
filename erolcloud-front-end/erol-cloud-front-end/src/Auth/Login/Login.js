@@ -34,6 +34,7 @@ const Login = () => {
             localStorage.setItem('email', response.email);
             localStorage.setItem('id', response.id);
             localStorage.setItem("role", response.roles[0]);
+            localStorage.setItem("name", response.name);
             navigate('/redirecting');
         }).catch((e) => {
             console.log("here");

@@ -5,6 +5,7 @@ import './InstructorHomePage.css';
 const InstructorHomePage = () => {
     let navigate = useNavigate();
     console.log(localStorage.getItem('accessToken'));
+    const instructorName = localStorage.getItem('name');
 
     const handleLogout = () => {
         localStorage.clear();//removeItem('accessToken'); // Clear the access token from localStorage
@@ -19,6 +20,7 @@ const InstructorHomePage = () => {
                 <button onClick={handleLogout} className="btn btn-primary">Logout</button>
             </header>
             <main className="main d-flex flex-column align-items-center justify-content-center">
+                <h3 style={{ padding: '20px' }}>Welcome {instructorName}</h3>
                 <button onClick={() => navigate('/take-attendance')} className="btn btn-primary mb-3">Take Attendance</button>
                 <button onClick={() => navigate('/view-attendances')} className="btn btn-primary mb-3">View attendances</button>
             </main>

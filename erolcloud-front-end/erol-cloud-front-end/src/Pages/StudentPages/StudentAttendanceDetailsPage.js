@@ -7,6 +7,7 @@ const StudentAttendanceDetailsPage = () => {
     const {courseId} = useParams()
     const [course, setCourse] = useState(null)
     const [timeSlots, setTimeSlots] = useState([])
+    const [instructor, setInstructor] = useState(null)
 
     useEffect( () => {
         const fetchCourse = async () => {
@@ -53,6 +54,30 @@ const StudentAttendanceDetailsPage = () => {
 
         fetchTimeSlots()
 
+
+        const fetchTInstructor = async () => {
+            try {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/courses/${courseId}/instructor`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+
+                const data = await response.json()
+                if (response.ok) {
+                    console.log('data: ' + data)
+                    setInstructor(data)
+                }
+            } catch (e) {
+                console.log('Error fetching course:', e)
+            }
+        }
+
+        //fetchTInstructor()
+
+
     }, [])
 
     if (!course) {
@@ -81,7 +106,7 @@ const StudentAttendanceDetailsPage = () => {
                         <strong>Section number:</strong> {course.section}
                     </div>
                     <div className='course-info'>
-                        <strong>Instructor:</strong> TODO
+                        <strong>Instructor:</strong> {instructor.name}
                     </div>
                     <div className='course-info'>
                         <strong>Time slots:</strong> {timeSlots}
