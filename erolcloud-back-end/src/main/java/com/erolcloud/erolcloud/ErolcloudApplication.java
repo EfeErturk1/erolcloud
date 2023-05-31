@@ -52,11 +52,11 @@ public class ErolcloudApplication {
 				Set<TimeSlot> timeSlots9 = new HashSet<>(timeSlotRepository.findAllById(List.of(8L)));
 				Set<TimeSlot> timeSlots10 = new HashSet<>(timeSlotRepository.findAllById(List.of(9L)));
 				Course course1 = courseRepository.save(new Course(1, "CS-342", "Operating Systems", timeSlots1));
-				Course course2 = courseRepository.save(new Course(2, "CS-342", "Operating Systems", timeSlots2));
+				Course course2 = courseRepository.save(new Course(1, "CS-353", "Database Systems", timeSlots2));
 				Course course3 = courseRepository.save(new Course(1, "CS-223", "Digital Design", timeSlots3));
-				Course course4 = courseRepository.save(new Course(2, "CS-223", "Digital Design", timeSlots4));
+				Course course4 = courseRepository.save(new Course(1, "CS-224", "Computer Organization", timeSlots4));
 				Course course5 = courseRepository.save(new Course(1, "IE-400", "Principles of Engineering Management", timeSlots5));
-				Course course6 = courseRepository.save(new Course(2, "IE-400", "Principles of Engineering Management", timeSlots6));
+				Course course6 = courseRepository.save(new Course(1, "IE-342", "Engineering Economic Analysis", timeSlots6));
 				Course course7 = courseRepository.save(new Course(1, "CS-202", "Fundamental Structures of Computer Science II", timeSlots7));
 				Course course8 = courseRepository.save(new Course(1, "CS-201", "Fundamental Structures of Computer Science I", timeSlots8));
 				Course course9 = courseRepository.save(new Course(1, "CS-491", "Senior Design Project I", timeSlots9));
@@ -95,21 +95,14 @@ public class ErolcloudApplication {
 				instructor6Courses.add(course10);
 				instructor6.setTeachings(instructor6Courses);
 				instructorRepository.save(instructor6);
-				for (Course course : courseRepository.findAll()) {
-					for (TimeSlot timeSlot : course.getTimeSlots()) {
-						LocalDateTime start = LocalDateTime.of(LocalDate.now(), timeSlot.getStartTime());
-						LocalDateTime end = LocalDateTime.of(LocalDate.now(), timeSlot.getEndTime());
-						lectureRepository.save(new Lecture(course,
-								start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
-								end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek())))));
-					}
-				}
+
 				s1.setCourses(List.of(course1, course4));
 				studentRepository.save(s1);
-				s2.setCourses(List.of(course2, course3));
+				s2.setCourses(List.of(course2, course3, course10));
 				studentRepository.save(s2);
 				s3.setCourses(List.of(course3, course5, course9));
 				studentRepository.save(s3);
+
 				List<Lecture> lectures = new ArrayList<>();
 				for (TimeSlot timeSlot : course1.getTimeSlots()) {
 					LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getStartTime());
@@ -171,7 +164,17 @@ public class ErolcloudApplication {
 				s3.setAttendances(lectures);
 				studentRepository.save(s3);
 
-				lectureRepository.save(new Lecture(course10, LocalDateTime.of(LocalDate.now(), LocalTime.of(22, 30)), LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(8,20))));
+				for (Course course : courseRepository.findAll()) {
+					for (TimeSlot timeSlot : course.getTimeSlots()) {
+						LocalDateTime start = LocalDateTime.of(LocalDate.now(), timeSlot.getStartTime());
+						LocalDateTime end = LocalDateTime.of(LocalDate.now(), timeSlot.getEndTime());
+						lectureRepository.save(new Lecture(course,
+								start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
+								end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek())))));
+					}
+				}
+
+				lectureRepository.save(new Lecture(course10, LocalDateTime.of(LocalDate.now(), LocalTime.of(15, 30)), LocalDateTime.of(LocalDate.now(), LocalTime.of(17,20))));
 				lectureRepository.save(new Lecture(course10, LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(22, 30)), LocalDateTime.of(LocalDate.now().plusDays(2), LocalTime.of(8,20))));
 			}
 		};
