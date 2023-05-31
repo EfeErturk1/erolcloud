@@ -37,7 +37,7 @@ const InstructorAttendanceDetailsPage = () => {
     useEffect(() => {
         const fetchLectures = async () => {
             try {
-                const response = await fetch(`http://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/${instructorId}/attendances`, { //TODO
+                const response = await fetch(`http://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/${instructorId}/attendances/course/${courseId}`, {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
