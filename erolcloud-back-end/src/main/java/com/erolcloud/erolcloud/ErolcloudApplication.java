@@ -13,12 +13,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootApplication
 public class ErolcloudApplication {
@@ -36,7 +32,9 @@ public class ErolcloudApplication {
 				roleRepository.save(new Role(Role.Authority.ADMIN));
 				roleRepository.save(new Role(Role.Authority.INSTRUCTOR));
 				roleRepository.save(new Role(Role.Authority.STUDENT));
-				studentRepository.save(new Student("d.kantarcioglu@ug.bilkent.edu.tr", "Doruk Kantarcioglu", passwordEncoder.encode("12345678"), Collections.singleton(roleRepository.findByAuthority(Role.Authority.STUDENT).get())));
+				Student s1 = studentRepository.save(new Student("d.kantarcioglu@ug.bilkent.edu.tr", "Doruk Kantarcioglu", passwordEncoder.encode("12345678"), Collections.singleton(roleRepository.findByAuthority(Role.Authority.STUDENT).get())));
+				Student s2 = studentRepository.save(new Student("efe.erturk@ug.bilkent.edu.tr", "Efe Erturk", passwordEncoder.encode("12345678"), Collections.singleton(roleRepository.findByAuthority(Role.Authority.STUDENT).get())));
+				Student s3 = studentRepository.save(new Student("cagla.ataoglu@ug.bilkent.edu.tr", "Cagla Ataoglu", passwordEncoder.encode("12345678"), Collections.singleton(roleRepository.findByAuthority(Role.Authority.STUDENT).get())));
 				for (int i = 1; i < 6; i++) {
 					timeSlotRepository.save(new TimeSlot(i, LocalTime.of(8, 30), LocalTime.of(10, 20)));
 					timeSlotRepository.save(new TimeSlot(i, LocalTime.of(10, 30), LocalTime.of(12, 20)));
@@ -106,6 +104,73 @@ public class ErolcloudApplication {
 								end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek())))));
 					}
 				}
+				s1.setCourses(List.of(course1, course4));
+				studentRepository.save(s1);
+				s2.setCourses(List.of(course2, course3));
+				studentRepository.save(s2);
+				s3.setCourses(List.of(course3, course5, course9));
+				studentRepository.save(s3);
+				List<Lecture> lectures = new ArrayList<>();
+				for (TimeSlot timeSlot : course1.getTimeSlots()) {
+					LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getStartTime());
+					LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getEndTime());
+					lectures.add(lectureRepository.save(new Lecture(course1,
+							start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
+							end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))))));
+				}
+				for (TimeSlot timeSlot : course4.getTimeSlots()) {
+					LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getStartTime());
+					LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getEndTime());
+					lectures.add(lectureRepository.save(new Lecture(course4,
+							start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
+							end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))))));
+				}
+				s1.setAttendances(lectures);
+				studentRepository.save(s1);
+
+				lectures = new ArrayList<>();
+				for (TimeSlot timeSlot : course2.getTimeSlots()) {
+					LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getStartTime());
+					LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getEndTime());
+					lectures.add(lectureRepository.save(new Lecture(course2,
+							start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
+							end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))))));
+				}
+				for (TimeSlot timeSlot : course3.getTimeSlots()) {
+					LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getStartTime());
+					LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getEndTime());
+					lectures.add(lectureRepository.save(new Lecture(course3,
+							start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
+							end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))))));
+				}
+				s2.setAttendances(lectures);
+				studentRepository.save(s2);
+
+				lectures = new ArrayList<>();
+				for (TimeSlot timeSlot : course3.getTimeSlots()) {
+					LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getStartTime());
+					LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getEndTime());
+					lectures.add(lectureRepository.save(new Lecture(course3,
+							start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
+							end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))))));
+				}
+				for (TimeSlot timeSlot : course5.getTimeSlots()) {
+					LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getStartTime());
+					LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getEndTime());
+					lectures.add(lectureRepository.save(new Lecture(course5,
+							start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
+							end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))))));
+				}
+				for (TimeSlot timeSlot : course9.getTimeSlots()) {
+					LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getStartTime());
+					LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(8), timeSlot.getEndTime());
+					lectures.add(lectureRepository.save(new Lecture(course9,
+							start.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))),
+							end.with(TemporalAdjusters.next(DayOfWeek.of(timeSlot.getDayOfWeek()))))));
+				}
+				s3.setAttendances(lectures);
+				studentRepository.save(s3);
+
 				lectureRepository.save(new Lecture(course10, LocalDateTime.of(LocalDate.now(), LocalTime.of(22, 30)), LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(8,20))));
 				lectureRepository.save(new Lecture(course10, LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(22, 30)), LocalDateTime.of(LocalDate.now().plusDays(2), LocalTime.of(8,20))));
 			}
