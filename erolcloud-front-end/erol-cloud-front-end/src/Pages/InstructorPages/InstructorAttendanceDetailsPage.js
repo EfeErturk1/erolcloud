@@ -8,8 +8,6 @@ const InstructorAttendanceDetailsPage = () => {
     const [course, setCourse] = useState(null)
     const [lectures, setLectures] = useState([])
     const instructorId = localStorage.getItem('id')
-    const [showPopup, setShowPopup] = useState(false);
-    const [students, setStudents] = useState([]);
 
     useEffect( () => {
         const fetchCourse = async () => {
@@ -37,7 +35,7 @@ const InstructorAttendanceDetailsPage = () => {
     useEffect(() => {
         const fetchLectures = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/instructors/${instructorId}/attendances`, {
+                const response = await fetch(`http://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/${instructorId}/attendances`, {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
@@ -45,6 +43,7 @@ const InstructorAttendanceDetailsPage = () => {
                     }
                 })
                 const data = await response.json()
+                console.log(data)
                 if (response.ok) {
                     setLectures(data.lectures)
                 }
@@ -75,16 +74,11 @@ const InstructorAttendanceDetailsPage = () => {
     }
 
     const parseTime = (datetime) => {
-        const time = datetime.substring(datetime.indexOf('T') + 1, datetime.length - 3)
-        return time
+        return datetime.substring(datetime.indexOf('T') + 1, datetime.length - 3)
     }
 
-    const viewAttendedStudents = (lecture) => {
-        setShowPopup(true)
-    }
-
-    const handleClosePopup = () => {
-        setShowPopup(false)
+    const viewAttendedStudents = (lectureId) => {
+        navigate(`/attended-students/${courseId}/${lectureId}`)
     }
 
     return (
@@ -92,7 +86,7 @@ const InstructorAttendanceDetailsPage = () => {
             <div className="row mt-4">
                 <div className="col-12">
                     <button className="btn btn-primary" onClick={() => navigate('/')}>Home</button>
-                    <button className="btn btn-primary" onClick={() => navigate('/attendances')}>Back</button>
+                    <button className="btn btn-primary" onClick={() => navigate('/view-attendances')}>Back</button>
                 </div>
             </div>
             <main className='main d-flex flex-column align-items-center justify-content-center'>
@@ -125,23 +119,13 @@ const InstructorAttendanceDetailsPage = () => {
                                         {parseDate(lecture.lecture.lectureStartDate)}, {parseTime(lecture.lecture.lectureStartDate)} - {parseTime(lecture.lecture.lectureEndDate)}
                                     </span>
                                     <button className='btn btn-primary' onClick={() => {
-                                        viewAttendedStudents(lecture.lecture)
+                                        viewAttendedStudents(lecture.lecture.id)
                                     }}>View attended students</button>
                                 </div>
                             </li>
                         ))}
                     </ul>
                 </div>
-                {showPopup && (
-                    <div className="popup">
-                        <div className="popup-content">
-                            <h3>Attended Students</h3>
-                            <button className="btn btn-primary" onClick={handleClosePopup}>
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                )}
             </main>
         </div>
     )
