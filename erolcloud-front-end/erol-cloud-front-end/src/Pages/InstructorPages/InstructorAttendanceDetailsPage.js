@@ -8,6 +8,8 @@ const InstructorAttendanceDetailsPage = () => {
     const [course, setCourse] = useState(null)
     const [lectures, setLectures] = useState([])
     const instructorId = localStorage.getItem('id')
+    const [timeSlots, setTimeSlots] = useState([])
+    const [noOfStudents, setNoOfStudents] = useState([])
 
     useEffect( () => {
         const fetchCourse = async () => {
@@ -45,7 +47,7 @@ const InstructorAttendanceDetailsPage = () => {
                 const data = await response.json()
                 console.log(data)
                 if (response.ok) {
-                    setLectures(data.lectures)
+                    setLectures(data)
                 }
             } catch (e) {
                 console.log('Error fetching lectures:', e)
@@ -53,29 +55,59 @@ const InstructorAttendanceDetailsPage = () => {
         }
 
         fetchLectures()
+
+
+        const fetchTimeSlots = async () => {
+            try {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/courses/${courseId}/time-slots`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+
+                const data = await response.text()
+                if (response.ok) {
+                    console.log('timeslots: ' + data)
+                    setTimeSlots(data)
+                }
+            } catch (e) {
+                console.log('Error fetching course:', e)
+            }
+        }
+
+        fetchTimeSlots()
+
+
+        const fetchNoOfStudents = async () => {
+            try {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/${instructorId}/courses/${courseId}/students`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+
+                const data = await response.json()
+                if (response.ok) {
+                    console.log('no of students: ' + data.length)
+                    setNoOfStudents(data.length)
+                }
+            } catch (e) {
+                console.log('Error fetching course:', e)
+            }
+        }
+
+        fetchNoOfStudents()
     }, [])
 
     if (!course) {
         return <div>Loading...</div>;
     }
 
-    const filteredLectures = lectures.filter((lecture) => {
-        return lecture.lecture.course.id === courseId
-    })
-    console.log(filteredLectures)
 
-    const parseDate = (datetime) => {
-        const date = datetime.substring(0, datetime.indexOf('T'))
-        const day = date.substring(8, 10)
-        const month = date.substring(5, 7)
-        const year = date.substring(0, 4)
-
-        return `${day}.${month}.${year}`
-    }
-
-    const parseTime = (datetime) => {
-        return datetime.substring(datetime.indexOf('T') + 1, datetime.length - 3)
-    }
 
     const viewAttendedStudents = (lectureId) => {
         navigate(`/attended-students/${courseId}/${lectureId}`)
@@ -103,29 +135,50 @@ const InstructorAttendanceDetailsPage = () => {
                         <strong>Section number:</strong> {course.section}
                     </div>
                     <div className='course-info'>
-                        <strong>Number of students:</strong> TODO
+                        <strong>Number of students:</strong> {noOfStudents}
                     </div>
                     <div className='course-info'>
-                        <strong>Time slots:</strong> TODO
+                        <strong>Time slots:</strong> {timeSlots}
                     </div>
                 </div>
-                <div className='course-info-container attendance-info-container'>
-                    <h2>Attendance Information</h2>
-                    <ul className='lecture-list'>
-                        {filteredLectures.map((lecture) => (
-                            <li key={lecture.lecture.id} className='attendance-item'>
-                                <div className='attendance-item-div'>
-                                    <span>
-                                        {parseDate(lecture.lecture.lectureStartDate)}, {parseTime(lecture.lecture.lectureStartDate)} - {parseTime(lecture.lecture.lectureEndDate)}
-                                    </span>
-                                    <button className='btn btn-primary' onClick={() => {
-                                        viewAttendedStudents(lecture.lecture.id)
-                                    }}>View attended students</button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                <div className='lecture-info-container container p-4'>
+                    <h2>Lecture Details</h2>
+                    {lectures && lectures.lectures && lectures.lectures.length > 0 ? (
+                        <ul className="list-group">
+                            {lectures.lectures.map((lectureResponse) => {
+                                const startDate = new Date(lectureResponse.lecture.lectureStartDate);
+                                const endDate = new Date(lectureResponse.lecture.lectureEndDate);
+                                return (
+                                    <li key={lectureResponse.lecture.id} className="list-group-item">
+                                        <div>
+                                            <span className="fw-bold">Lecture Date and Time: {startDate.toLocaleDateString()}, {startDate.toLocaleTimeString()} - {endDate.toLocaleTimeString()}</span>
+                                        </div>
+                                        <table className="table mt-3">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" style={{ width: '50%' }}>Student Name</th>
+                                                <th scope="col">Attended</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {lectureResponse.studentAttendances.map((studentAttendance) => (
+                                                <tr key={studentAttendance.student.id}>
+                                                    <td>{studentAttendance.student.name}</td>
+                                                    <td>{studentAttendance.attended ? "Yes" : "No"}</td>
+                                                </tr>
+                                            ))}
+                                            </tbody>
+                                        </table>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    ) : (
+                        <p>No lecture data available.</p>
+                    )}
                 </div>
+
+
             </main>
         </div>
     )

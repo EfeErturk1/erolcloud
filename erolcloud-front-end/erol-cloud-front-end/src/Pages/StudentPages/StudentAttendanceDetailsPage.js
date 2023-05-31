@@ -44,7 +44,7 @@ const StudentAttendanceDetailsPage = () => {
                     }
                 })
 
-                const data = await response.json()
+                const data = await response.text()
                 if (response.ok) {
                     console.log('timeslots: ' + data)
                     setTimeSlots(data)
@@ -137,15 +137,15 @@ const StudentAttendanceDetailsPage = () => {
                 </div>
                 <div className='course-info-container attendance-info-container'>
                     <h2>Attendance Information</h2>
-                    {attendances && attendances.attendances ? (
+                    {attendances && attendances.lectures && attendances.lectures.length > 0 ? (
                         <ul>
-                            {attendances.attendances.map((lecture) => (
-                                <li key={lecture.id}>
+                            {attendances.lectures.map((studentLecture) => (
+                                <li key={studentLecture.lecture.id}>
                                     <div>
-                                        <span>Lecture Start Date: {lecture.lectureStartDate}</span>
-                                    </div>
-                                    <div>
-                                        <span>Lecture End Date: {lecture.lectureEndDate}</span>
+                                        <span>Lecture Start Date: {studentLecture.lecture.lectureStartDate}</span>
+                                        <span> - </span>
+                                        <span>Lecture End Date: {studentLecture.lecture.lectureEndDate}</span>
+                                        <span> - Attended: {studentLecture.attended ? "Yes" : "No"}</span>
                                     </div>
                                 </li>
                             ))}
@@ -154,8 +154,6 @@ const StudentAttendanceDetailsPage = () => {
                         <p>No attendance data available.</p>
                     )}
                 </div>
-
-
 
             </main>
         </div>
