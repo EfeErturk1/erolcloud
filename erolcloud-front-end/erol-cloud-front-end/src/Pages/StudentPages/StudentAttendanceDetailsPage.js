@@ -81,7 +81,7 @@ const StudentAttendanceDetailsPage = () => {
 
         const fetchAttendances = async () => {
             try {
-                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/student/${studentId}/attendances/courses/${courseId}`, {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/students/${studentId}/attendances/courses/${courseId}`, {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
@@ -138,22 +138,35 @@ const StudentAttendanceDetailsPage = () => {
                 <div className='course-info-container attendance-info-container'>
                     <h2>Attendance Information</h2>
                     {attendances && attendances.lectures && attendances.lectures.length > 0 ? (
-                        <ul>
-                            {attendances.lectures.map((studentLecture) => (
-                                <li key={studentLecture.lecture.id}>
-                                    <div>
-                                        <span>Lecture Start Date: {studentLecture.lecture.lectureStartDate}</span>
-                                        <span> - </span>
-                                        <span>Lecture End Date: {studentLecture.lecture.lectureEndDate}</span>
-                                        <span> - Attended: {studentLecture.attended ? "Yes" : "No"}</span>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th>Lecture Date</th>
+                                <th>Lecture Time</th>
+                                <th>Attended</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {attendances.lectures.map((studentLecture) => {
+                                const startDate = new Date(studentLecture.lecture.lectureStartDate);
+                                const endDate = new Date(studentLecture.lecture.lectureEndDate);
+                                const startTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                const endTime = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                return (
+                                    <tr key={studentLecture.lecture.id}>
+                                        <td>{startDate.toLocaleDateString()}</td>
+                                        <td>{`${startTime} - ${endTime}`}</td>
+                                        <td>{studentLecture.attended ? "Yes" : "No"}</td>
+                                    </tr>
+                                );
+                            })}
+                            </tbody>
+                        </table>
                     ) : (
                         <p>No attendance data available.</p>
                     )}
                 </div>
+
 
             </main>
         </div>

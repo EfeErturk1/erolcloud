@@ -37,7 +37,7 @@ const InstructorAttendanceDetailsPage = () => {
     useEffect(() => {
         const fetchLectures = async () => {
             try {
-                const response = await fetch(`http://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/${instructorId}/attendances`, {
+                const response = await fetch(`http://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/${instructorId}/attendances`, { //TODO
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
@@ -148,10 +148,12 @@ const InstructorAttendanceDetailsPage = () => {
                             {lectures.lectures.map((lectureResponse) => {
                                 const startDate = new Date(lectureResponse.lecture.lectureStartDate);
                                 const endDate = new Date(lectureResponse.lecture.lectureEndDate);
+                                const startTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                const endTime = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                                 return (
                                     <li key={lectureResponse.lecture.id} className="list-group-item">
                                         <div>
-                                            <span className="fw-bold">Lecture Date and Time: {startDate.toLocaleDateString()}, {startDate.toLocaleTimeString()} - {endDate.toLocaleTimeString()}</span>
+                                            <span className="fw-bold">Lecture Date and Time: {startDate.toLocaleDateString()}, {startTime} - {endTime}</span>
                                         </div>
                                         <table className="table mt-3">
                                             <thead>
@@ -177,7 +179,6 @@ const InstructorAttendanceDetailsPage = () => {
                         <p>No lecture data available.</p>
                     )}
                 </div>
-
 
             </main>
         </div>
