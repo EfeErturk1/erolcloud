@@ -44,6 +44,12 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.getStudentAttendanceRecords(instructorId));
     }
 
+    @GetMapping("/{instructorId}/attendances/course/{courseId}")
+    public ResponseEntity<InstructorAttendanceResponse> getTotalAttendances(@PathVariable Long instructorId,
+                                                                            @PathVariable Long courseId) {
+        return ResponseEntity.ok(instructorService.getStudentAttendanceRecords(instructorId, courseId));
+    }
+
     @GetMapping("/{instructorId}/courses")
     public ResponseEntity<List<CourseResponse>> getCourseStudents(@PathVariable Long instructorId) {
         return new ResponseEntity<>(instructorService.getInstructorCourses(instructorId), HttpStatus.OK);

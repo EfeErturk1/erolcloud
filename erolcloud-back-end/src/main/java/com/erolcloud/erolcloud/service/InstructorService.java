@@ -105,6 +105,34 @@ public class InstructorService {
     }
 
     @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")
+    public InstructorAttendanceResponse getStudentAttendanceRecords(Long instructorId, Long courseId) {
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new EntityNotFoundException("Instructor with ID " + instructorId + " not found."));
+        Course instructorCourses = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Course with ID " + courseId + " not found."));
+        //List<Lecture> totalLectures = lectureRepository.findByCourseIn(instructorCourses);
+        List<Lecture> lectures = lectureRepository.findByCourse(instructorCourses);
+        List<InstructorLectureResponse> lectureResponses = new ArrayList<>();
+        for (Lecture lecture: lectures) {
+            List<InstructorLectureStudentResponse> studentResponses = new ArrayList<>();
+            for (Student student : lecture.getCourse().getStudents()) {
+                if (student.getAttendances().contains(lecture)) {
+                    studentResponses.add(new InstructorLectureStudentResponse(
+                            new UserResponse(student.getId(), student.getEmail(), student.getName()), true));
+                }
+                else {
+                    studentResponses.add(new InstructorLectureStudentResponse(
+                            new UserResponse(student.getId(), student.getEmail(), student.getName()), false));
+                }
+            }
+            lectureResponses.add(new InstructorLectureResponse(
+                    new LectureResponse(lecture.getId(), lecture.getStartDate(), lecture.getEndDate(),
+                            CourseService.getCourseResponse(lecture.getCourse())), studentResponses));
+        }
+        return new InstructorAttendanceResponse(instructorId, lectureResponses);
+    }
+
+    @PreAuthorize("hasAuthority('INSTRUCTOR') and #instructorId == authentication.principal.id")
     public List<CourseResponse> getInstructorCourses(Long instructorId) {
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new EntityNotFoundException("Instructor with ID " + instructorId + " not found."));
