@@ -8,26 +8,31 @@ const InstructorTakeAttendance = () => {
     const instructorId = localStorage.getItem("id");
 
     useEffect(() => {
-    const displayCode = async () => {
-        try {
-            const response = fetch("https://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/" + instructorId + "/lectures/current", {
-                method: "GET",
-                headers: {
-                    "Content-type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem('token')
+        const displayCode = async () => {
+            try {
+                const response = await fetch(`https://erolcloud-back-end.uc.r.appspot.com/api/v1/instructors/${instructorId}/lectures/current`, {
+                    method: "GET",
+                    headers: {
+                        "Content-type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem('token')
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log("code: " + data.code);
+                    setCode(data.code);
                 }
-            })
-            const data = await response.json();
-            setCode(data)
-            console.log(data);
-        } catch (e) {
-            console.log("Error fetching courses:", e);
-            setCode("Error in code display")
-        }
-    };
+            } catch (e) {
+                console.log("Error fetching courses:", e);
+                setCode("Error in code display");
+            }
+        };
+
         displayCode();
-        }, []);
+    }, []);
 
 
     return (
